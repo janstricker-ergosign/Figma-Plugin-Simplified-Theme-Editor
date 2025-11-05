@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<!-- Dies ist das Haupt-HTML-Dokument für die Benutzeroberfläche (UI) des Plugins -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Stellt sicher, dass die Zeichenkodierung korrekt ist -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Wichtig für responsives Verhalten, falls das Fenster skaliert wird -->
+  <title>Simplified Theme Generator</title>
+  <!-- Der Titel, der in der Kopfzeile des Plugin-Fensters erscheint -->
+
+  <!-- Google Fonts: Lädt die Schriftart "Inter" für ein sauberes UI-Design -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Start der CSS-Stile -->
+  <style>
+    /* === Basis-Stile === */
+    /* Setzt das Box-Modell auf 'border-box', was das Layouten erleichtert */
+    * { box-sizing: border-box; }
+    /* Grundlegendes Styling für das gesamte Plugin-Fenster */
+    body {
+      font-family: 'Inter', sans-serif; /* Setzt die geladene Schriftart */
+      margin: 0;
+      padding: 24px;
+      display: flex;
+      flex-direction: column; /* Alle Haupt-Elemente stapeln sich vertikal */
+      gap: 16px; /* Abstand zwischen den Haupt-Elementen */
+      height: 100vh; /* Füllt die gesamte Höhe des Fensters */
+      overflow: hidden; /* Verhindert Scrollbalken auf der Body-Ebene */
+      background-color: #f0f0f0; /* Heller Hintergrund für das Fenster */
+      color: #1E1E1E; /* Standard-Textfarbe */
+    }
+
+    /* === Typografie === */
+    /* Stil für alle <h2> Überschriften (z.B. "Color Picker", "Adjustments") */
+    h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      margin: 0;
+      color: #303030;
+      width: 100%;
+    }
+
+    /* === Formular-Layout (Obere Leiste) === */
+    /* Stile für die Labels in der oberen Leiste (z.B. "Import from Variables") */
+    .input-group label {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1E1E1E;
+      opacity: 0.8;
+      line-height: normal;
+      white-space: pre;
+      margin: 0;
+    }
+    /* Stil für die Text-Inputs in der oberen Leiste (z.B. "Theme Name") */
+    .input-group input {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 16px;
+      color: #1E1E1E;
+      padding: 11px 15px;
+      background: white;
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      min-width: 200px;
+      width: 100%;
+    }
+    /* Stil für das <select> Dropdown-Menü */
+    .input-group select {
+        appearance: none; /* Entfernt das Standard-Aussehen des Browsers */
+        -webkit-appearance: none;
+        /* Fügt einen eigenen Pfeil als Hintergrundbild hinzu */
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23303030' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+    }
+
+    /* === Haupt-Layout-Komponenten === */
+    /* Die obere Leiste, die Import, Name und Export-Button enthält */
+    .top-row {
+      display: flex;
+      align-items: flex-end; /* Richtet Elemente an der Unterkante aus */
+      gap: 16px;
+      width: 100%;
+    }
+    /* Der weiße Haupt-Container für alle Einstellungen (Picker, Regler, etc.) */
+    .content-divider {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start; /* Richtet Spalten an der Oberkante aus */
+    }
+
+    /* Generische Formular-Stile (wird in .top-row wiederverwendet) */
+    .input-group {
+      flex: 1; /* Erlaubt dem Element, sich zu vergrößern */
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 200px;
+    }
+    .input-group label {
+      color: #1E1E1E;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 20px;
+      opacity: 0.8;
+    }
+    /* Gemeinsame Stile für Text-Input und Select-Dropdown */
+    .text-input, .select-input {
+      background: white;
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 14px;
+      color: #1E1E1E;
+      width: 100%;
+    }
+    .text-input::placeholder {
+      color: #B3B3B3;
+    }
+
+    /* === Sektion: Color Picker (Spalte 1) === */
+    /* Der quadratische Wrapper für das <input type="color"> */
+    .color-swatch-input {
+      width: 36px;
+      height: 36px;
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      overflow: hidden; /* Versteckt Ecken des inneren Elements */
+      padding: 1px;
+    }
+    /* Das eigentliche <input type="color"> Element (der Farbwähler) */
+    .color-picker {
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 0;
+      margin: 0;
+      background: none;
+      cursor: pointer;
+      border-radius: 7px; /* Leicht abgerundet innerhalb des Wrappers */
+    }
+    /* Webkit-spezifische Stile, um den Standard-Rahmen des Farbwählers zu entfernen */
+    .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+    .color-picker::-webkit-color-swatch { border: none; border-radius: 7px; }
+
+    /* Stil für das HEX-Code-Texteingabefeld */
+    .hex-input {
+      font-family: 'Menlo', 'Courier New', monospace; /* Monospace-Schriftart für Code */
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 16px;
+      color: #1E1E1E;
+      padding: 10px 12px;
+      background: white;
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      width: 120px; /* Feste Breite */
+      text-transform: uppercase; /* Zeigt HEX-Codes immer groß an */
+    }
+    .hex-input::placeholder {
+      color: #B3B3B3;
+    }
+
+    /* === Sektion: Adjustments (Spalte 3) === */
+    /* Wrapper für einen Schieberegler (Label + Regler) */
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    /* Wrapper für die Beschriftung (z.B. "Palette Contrast" ... "50%") */
+    .slider-label {
+      display: flex;
+      justify-content: space-between; /* Verteilt Label und Wert an die Enden */
+      font-size: 12px;
+      color: #1E1E1E;
+      opacity: 0.8;
+    }
+    /* Der Schieberegler (<input type="range">) */
+    .slider {
+      width: 100%;
+      height: 4px;
+      background: #D9D9D9; /* Die "Spur" des Reglers */
+      border-radius: 2px;
+      -webkit-appearance: none; /* Entfernt Standard-Aussehen */
+      appearance: none;
+      margin: 0;
+      cursor: pointer;
+    }
+    /* Der "Knopf" (Thumb) des Schiebereglers */
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #1E1E1E; /* Dunkler Knopf */
+      border-radius: 50%; /* Kreisrund */
+      cursor: pointer;
+      margin-top: -6px; /* Zentriert den Knopf vertikal auf der Spur */
+    }
+
+    /* === Sektion: WCAG (Spalte 4) === */
+    /* Wrapper für die WCAG-Radio-Buttons */
+    .wcag-contrast-group {
+      flex: 1 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 1px;
+      min-width: 1px;
+      position: relative;
+      width: 100%;
+    }
+    .wcag-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: normal;
+      color: #1E1E1E;
+      opacity: 0.8;
+      width: 100%;
+      margin: 0;
+    }
+    /* Gruppe der Radio-Buttons (AA und AAA) */
+    .radio-group {
+      display: flex;
+      width: 100%;
+      gap: 12px; /* Abstand zwischen AA und AAA (wird hier nicht genutzt, da vertikal) */
+    }
+    /* Das Label, das den Radio-Button und den Text umgibt */
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px; /* Abstand zwischen Knopf und Text "AA..." */
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: normal;
+      color: #1E1E1E;
+      cursor: pointer;
+      flex: 1;
+    }
+    /* Der eigentliche Radio-Knopf (<input type="radio">) */
+    .radio-label input[type="radio"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 2px solid #1E1E1E; /* Eigener Rand */
+      border-radius: 50%;
+      position: relative;
+      cursor: pointer;
+    }
+    /* Zeigt den inneren Punkt an, wenn der Radio-Button ausgewählt ist */
+    .radio-label input[type="radio"]:checked::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #1E1E1E;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* Zentriert den Punkt */
+    }
+
+    /* === Sektion: Buttons === */
+    /* Stil für den primären Button (Export/Update) */
+    .button-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 11px;
+      height: 38px;
+      background: #D9D9D9; /* Ausgegraut (disabled) */
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      color: #757575;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: not-allowed;
+      transition: all 0.2s; /* Sanfter Übergang */
+    }
+    /* Stil, wenn der Button *nicht* disabled ist */
+    .button-primary:not(:disabled) {
+      background: #2C2C2C; /* Aktiv (dunkel) */
+      border-color: #2C2C2C;
+      color: white;
+      cursor: pointer;
+    }
+    .button-primary:not(:disabled):hover {
+      background: #444; /* Hover-Effekt */
+    }
+    /* Stellt sicher, dass das SVG-Icon im Button weiß wird, wenn aktiv */
+    .button-primary:not(:disabled) svg path {
+      stroke: white;
+    }
+    
+    /* Stil für die sekundären Buttons (Switch/Random) */
+    .button-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px;
+      height: 36px;
+      background: white;
+      border: 1px solid #303030; /* Dunkler Rand */
+      border-radius: 8px;
+      color: #303030;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 102px; /* Feste Breite laut Screenshot */
+    }
+    .button-secondary:hover {
+      background: #f5f5f5;
+    }
+    /* SVG-Icon im sekundären Button (bleibt dunkel) */
+    .button-secondary svg path {
+      stroke: #303030;
+    }
+    
+
+    /* === Sektion: Spalten-Layout im content-divider === */
+    /* Spalte 1: Color Picker */
+    .left-column {
+      flex: 1 0 0; /* Flexibel wachsend */
+      display: flex;
+      flex-direction: column;
+      gap: 16px; /* Abstand zwischen <h2> und Grid */
+      min-height: 1px;
+      min-width: 1px;
+      position: relative;
+    }
+    /* Raster-Layout für Farbwähler und HEX-Inputs */
+    .color-input-grid {
+      display: grid;
+      grid-template-columns: auto 1fr; /* 1. Spalte (Swatch) so breit wie nötig, 2. (Hex) füllt Rest */
+      gap: 16px 8px; /* 16px Zeilenabstand, 8px Spaltenabstand */
+      align-items: center;
+    }
+    /* Spalte 2: Switch/Random Buttons */
+    .color-actions-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 36px; /* Vertikaler Abstand, um Buttons auf Höhe des ersten Pickers auszurichten */
+    }
+    /* Trennlinien zwischen den Spalten */
+    .vertical-divider {
+      width: 1px;
+      height: 176px; /* Feste Höhe, passend zum Inhalt */
+      align-self: flex-start;
+      background-color: #E6E6E6;
+      border-radius: 2px;
+      flex-shrink: 0; /* Verhindert, dass die Linie schrumpft */
+    }
+    /* Spalte 3: Adjustments (Regler) */
+    .adjustments-column {
+      flex: 1 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      min-height: 1px;
+      min-width: 1px;
+      position: relative;
+      width: 244px; /* Feste Breite laut Layout */
+      flex-shrink: 0;
+    }
+    .sliders-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex-grow: 1;
+    }
+    /* Spalte 4: WCAG (Radio-Buttons) */
+    .wcag-column {
+        flex: 1 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        height: 100%;
+        min-height: 1px;
+        min-width: 1px;
+        position: relative;
+        width: 115px; /* Feste Breite laut Layout */
+        flex-shrink: 0;
+    }
+    
+    /* === Sektion: Unterer Bereich (Vorschau-Tabs) === */
+    .preview-container {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden; /* Wichtig für die abgerundeten Ecken */
+      flex-grow: 1; /* Füllt den restlichen vertikalen Platz */
+      display: flex;
+      flex-direction: column;
+      min-height: 300px; /* Stellt sicher, dass der Bereich nicht kollabiert */
+    }
+    /* Kopfzeile, die die Tab-Reiter enthält */
+    .tabs-header {
+      display: flex;
+      gap: 4px;
+      height: 40px;
+      background: white;
+      align-items: start;
+      width: 100%;
+      flex-shrink: 0; /* Verhindert Schrumpfen */
+      border-bottom: 1px solid #E6E6E6; /* Linie unter den Tabs */
+      padding: 0 16px;
+    }
+    /* Einzelner Tab-Reiter (z.B. "System Tokens") */
+    .tab {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #757575; /* Inaktiv */
+      cursor: pointer;
+      position: relative;
+      background: white;
+      padding: 8px 4px;
+      margin: 0 12px;
+      border-bottom: 2px solid transparent; /* Platzhalter für den aktiven Indikator */
+      margin-bottom: -1px; /* Hebt den Tab-Reiter über die untere Linie */
+    }
+    .tab span {
+      line-height: normal;
+      white-space: nowrap; /* Verhindert Zeilenumbruch im Tab-Label */
+    }
+    /* Stil für den *aktiven* Tab-Reiter */
+    .tab.active {
+      border-bottom: 2px solid #303030; /* Aktiver Indikator (Linie) */
+      color: #1E1E1E; /* Aktive Textfarbe */
+    }
+    /* Container, der den *Inhalt* aller Tabs umschließt */
+    .tab-content {
+      flex-grow: 1;
+      overflow-y: auto; /* Erlaubt Scrollen, wenn der Inhalt zu hoch ist */
+      background: white;
+    }
+    /* Einzelnes Inhalts-Panel (z.B. die Token-Vorschau) */
+    .tab-panel {
+      display: none; /* Standardmäßig versteckt */
+      padding: 16px;
+      height: 100%;
+    }
+    /* Das aktive Panel wird sichtbar gemacht */
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* === Sektion: System Tokens Vorschau (Tab 1) === */
+    .preview-grid {
+      display: flex;
+      flex-wrap: wrap; /* Bricht in die nächste Zeile um, wenn nicht genug Platz */
+      gap: 24px 16px;
+      justify-content: flex-start;
+      margin-bottom: 16px;
+    }
+    /* Eine einzelne Sektion (z.B. "Primary", "Secondary") */
+    .preview-section {
+      flex: 1;
+      min-width: 200px; /* Mindestbreite, bevor es umbricht */
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .heading-3 {
+      width: 100%;
+    }
+    .heading-3 h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1E1E1E;
+      opacity: 0.8;
+      line-height: normal;
+      margin: 0;
+    }
+    /* Die "Light" / "Dark" Beschriftung über den Farbfeldern */
+    .label-row {
+      display: flex;
+      gap: 10px;
+      padding-left: 34px; /* (24px Swatch + 10px Gap) -> richtet an Swatches aus */
+    }
+    .color-label {
+      width: 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 8px;
+      font-weight: 500;
+      color: #1E1E1E;
+      opacity: 0.5;
+      line-height: normal;
+      white-space: pre;
+      text-align: center;
+    }
+    /* Vertikales Raster für die Farb-Zeilen */
+    .color-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    /* Eine einzelne Zeile (z.B. [Light Swatch] [Dark Swatch] "primary") */
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+    /* Äußerer Wrapper für ein Farbfeld (Swatch) */
+    .color-swatch-wrapper {
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      width: 24px;
+      height: 24px;
+      position: relative;
+      padding: 1px;
+      box-sizing: border-box;
+      /* Schachbrett-Hintergrund für Transparenz-Vorschau (shadow/overlay) */
+      background-image: linear-gradient(45deg, #EAEAEA 25%, transparent 25%), 
+                      linear-gradient(-45deg, #EAEAEA 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, #EAEAEA 75%), 
+                      linear-gradient(-45deg, transparent 75%, #EAEAEA 75%);
+      background-size: 8px 8px;
+      background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+      flex-shrink: 0;
+    }
+    /* Das innere Farbfeld, das die eigentliche Farbe anzeigt */
+    .color-swatch-preview {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px; /* Innerer Radius */
+    }
+    /* Der Token-Name (z.B. "on-primary") */
+    .color-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: #1E1E1E;
+      opacity: 0.8;
+      line-height: 16px;
+      flex-grow: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis; /* Schneidet langen Text mit "..." ab */
+    }
+
+    /* WCAG-Warn-Indikator (das kleine '!') */
+    .wcag-warning {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 14px;
+      height: 14px;
+      background: #E6A700;
+      border: 1px solid white;
+      border-radius: 7px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      display: none; /* Standardmäßig versteckt */
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      z-index: 1;
+      line-height: 10px;
+    }
+    /* Wird per JS hinzugefügt, um die Warnung anzuzeigen */
+    .wcag-warning.visible {
+      display: flex;
+    }
+
+    /* === Sektion: Palettes Vorschau (Tab 2) === */
+    .palette-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .palette-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .palette-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #303030;
+      text-transform: capitalize; /* "neutral" -> "Neutral" */
+    }
+    /* Der Balken, der alle Farbstufen (50-900) enthält */
+    .palette-scale {
+      display: flex;
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 32px;
+    }
+    /* Einzelnes Farbfeld in der Skala */
+    .palette-swatch {
+      flex: 1; /* Alle Felder teilen sich den Platz gleichmäßig */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(0,0,0,0.4); /* Dunkler Text (Standard) */
+    }
+    /* Klasse für hellen Text (wird bei dunklen Hintergrundfarben gesetzt) */
+    .palette-swatch.light-text { color: rgba(255,255,255,0.5); }
+
+
+    /* === Sektion: Code-Ausgabe (Tabs 3 & 4) === */
+    .code-container {
+      position: relative;
+      background: #F8F8F8;
+      border: 1px solid #D9D9D9;
+      border-radius: 8px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    /* "Copy" Button */
+    .copy-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      background: white;
+      border: 1px solid #D9D9D9;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .copy-button:hover { background: #f5f5f5; }
+
+    /* <pre> Tag, das den Code-Inhalt enthält */
+    pre {
+      margin: 0;
+      padding: 16px;
+      padding-top: 48px; /* Platz für den Copy-Button */
+      font-family: 'Menlo', 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      overflow: auto; /* Erlaubt Scrollen im Code-Block */
+      flex-grow: 1;
+      color: #1E1E1E;
+    }
+    pre code { white-space: pre; } /* Behält Formatierung (Leerzeichen, Umbrüche) bei */
+  </style>
+  <!-- Ende der CSS-Stile -->
+</head>
+<body>
+  <!-- 
+    ===== HTML-Struktur START =====
+    Die UI besteht aus 3 Hauptteilen:
+    1. .top-row: Obere Leiste für Import/Export
+    2. .content-divider: Der Einstellungs-Bereich (Farben, Regler)
+    3. .preview-container: Der untere Bereich mit den Tabs
+  -->
+
+  <!-- 1. Obere Leiste -->
+  <div class="top-row">
+    <!-- Dropdown zum Importieren vorhandener Variablen -->
+    <div class="input-group">
+      <label for="import-existing-select">Import from Variables (optional)</label>
+      <select id="import-existing-select" class="select-input">
+        <option value="">Select collection...</option>
+      </select>
+    </div>
+    <!-- Textfeld für den Namen des Themes -->
+    <div class="input-group">
+      <label for="theme-name">Theme Name</label>
+      <input type="text" id="theme-name" class="text-input" placeholder="Name">
+    </div>
+    <!-- Haupt-Button zum Exportieren oder Aktualisieren -->
+    <button id="generate-button" class="button-primary" disabled>
+      <span id="generate-button-text">Export to Variables</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8.00016 10.6663L10.6669 7.99967M10.6669 7.99967L8.00016 5.33301M10.6669 7.99967H5.3335M14.6669 7.99967C14.6669 11.6816 11.6821 14.6663 8.00016 14.6663C4.31826 14.6663 1.3335 11.6816 1.3335 7.99967C1.3335 4.31778 4.31826 1.33301 8.00016 1.33301C11.6821 1.33301 14.6669 4.31778 14.6669 7.99967Z" stroke="#757575" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 2. Einstellungs-Bereich (Layout basiert auf dem Screenshot) -->
+  <div class="content-divider">
+    
+    <!-- SPALTE 1: Color Picker -->
+    <div class="left-column">
+      <h2>Color Picker</h2>
+      <!-- Das Grid-Layout für die Farbauswahl -->
+      <div class="color-input-grid">
+        <!-- Primary Farbe (Picker + Hex-Feld) -->
+        <div class="color-swatch-input">
+          <input type="color" id="primary-color-picker" class="color-picker" value="#2E86AB">
+        </div>
+        <input type="text" id="primary-hex-input" class="hex-input" value="#2E86AB">
+        
+        <!-- Secondary Farbe (Picker + Hex-Feld) -->
+        <div class="color-swatch-input">
+          <input type="color" id="secondary-color-picker" class="color-picker" value="#C0F5A1">
+        </div>
+        <input type="text" id="secondary-hex-input" class="hex-input" value="#C0F5A1">
+
+        <!-- Tertiary Farbe (Picker + Hex-Feld) -->
+        <div class="color-swatch-input">
+          <input type="color" id="tertiary-color-picker" class="color-picker" value="#EF8611">
+        </div>
+        <input type="text" id="tertiary-hex-input" class="hex-input" value="#EF8611">
+      </div>
+    </div>
+
+    <!-- SPALTE 2: Action-Buttons -->
+    <div class="color-actions-column">
+      <!-- "Switch" Button -->
+      <button id="switch-button" class="button-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.0002 2.66663H12.6668M12.6668 2.66663V5.33329M12.6668 2.66663L9.8335 6.16663M3.3335 12.6666L6.00016 9.99996M10.0002 12.6666H12.6668M12.6668 12.6666V9.99996M12.6668 12.6666L3.3335 3.33329" stroke="#303030" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Switch</span>
+      </button>
+      <!-- "Random" Button -->
+      <button id="random-button" class="button-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C12.5304 2 13.0391 2.21071 13.4142 2.58579C13.7893 2.96086 14 3.46957 14 4V12C14 12.5304 13.7893 13.0391 13.4142 13.4142C13.0391 13.7893 12.5304 14 12 14H4C3.46957 14 2.96086 13.7893 2.58579 13.4142C2.21071 13.0391 2 12.5304 2 12V4C2 3.46957 2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957 2 4 2H12ZM12 3.33333H4C3.82319 3.33333 3.65362 3.40357 3.5286 3.5286C3.40357 3.65362 3.33333 3.82319 3.33333 4V12C3.33333 12.1768 3.40357 12.3464 3.5286 12.4714C3.65362 12.5964 3.82319 12.6667 4 12.6667H12C12.1768 12.6667 12.3464 12.5964 12.4714 12.4714C12.5964 12.3464 12.6667 12.1768 12.6667 12V4C12.6667 3.82319 12.5964 3.65362 12.4714 3.5286C12.3464 3.40357 12.1768 3.33333 12 3.33333ZM5.66667 9.33333C5.91526 9.33335 6.15493 9.42595 6.33895 9.59308C6.52296 9.76021 6.63814 9.98989 6.662 10.2373L6.66667 10.34C6.66654 10.5968 6.56762 10.8437 6.39039 11.0296C6.21317 11.2155 5.97124 11.326 5.71472 11.3383C5.45821 11.3507 5.20678 11.2639 5.01253 11.0959C4.81829 10.9279 4.69611 10.6916 4.67133 10.436L4.66667 10.3333C4.66667 10.0681 4.77202 9.81376 4.95956 9.62623C5.1471 9.43869 5.40145 9.33333 5.66667 9.33333ZM10.3333 9.33333C10.5819 9.33335 10.8216 9.42595 11.0056 9.59308C11.1896 9.76021 11.3048 9.98989 11.3287 10.2373L11.3333 10.34C11.3332 10.5968 11.2343 10.8437 11.0571 11.0296C10.8798 11.2155 10.6379 11.326 10.3814 11.3383C10.1249 11.3507 9.87345 11.2639 9.6792 11.0959C9.48495 10.9279 9.36278 10.6916 9.338 10.436L9.33333 10.3333C9.33333 10.0681 9.43869 9.81376 9.62623 9.62623C9.81376 9.43869 10.0681 9.33333 10.3333 9.33333ZM8 7C8.24859 7.00001 8.48826 7.09261 8.67228 7.25975C8.8563 7.42688 8.97147 7.65656 8.99533 7.904L9 8.00667C8.99987 8.26348 8.90095 8.5104 8.72373 8.69626C8.54651 8.88212 8.30457 8.99268 8.04806 9.00502C7.79154 9.01736 7.54011 8.93054 7.34587 8.76255C7.15162 8.59456 7.02945 8.35828 7.00467 8.10267L7 8C7 7.73478 7.10536 7.48043 7.29289 7.29289C7.48043 7.10536 7.73478 7 8 7ZM5.66667 4.66667C5.91526 4.66668 6.15493 4.75928 6.33895 4.92641C6.52296 5.09355 6.63814 5.32323 6.662 5.57067L6.66667 5.67333C6.66654 5.93014 6.56762 6.17706 6.39039 6.36292C6.21317 6.54879 5.97124 6.65934 5.71472 6.67168C5.45821 6.68402 5.20678 6.59721 5.01253 6.42922C4.81829 6.26123 4.69611 6.02495 4.67133 5.76933L4.66667 5.66667C4.66667 5.40145 4.77202 5.1471 4.95956 4.95956C5.1471 4.77202 5.40145 4.66667 5.66667 4.66667ZM10.3333 4.66667C10.5819 4.66668 10.8216 4.75928 11.0056 4.92641C11.1896 5.09355 11.3048 5.32323 11.3287 5.57067L11.3333 5.67333C11.3332 5.93014 11.2343 6.17706 11.0571 6.36292C10.8798 6.54879 10.6379 6.65934 10.3814 6.67168C10.1249 6.68402 9.87345 6.59721 9.6792 6.42922C9.48495 6.26123 9.36278 6.02495 9.338 5.76933L9.33333 5.66667C9.33333 5.40145 9.43869 5.1471 9.62623 4.95956C9.81376 4.77202 10.0681 4.66667 10.3333 4.66667Z" fill="#303030"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Vertikale Trennlinie -->
+    <div class="vertical-divider"></div>
+
+    <!-- SPALTE 3: Adjustments (Schieberegler) -->
+    <div class="adjustments-column">
+      <h2>Adjustments</h2>
+      <div class="sliders-column">
+        <!-- Regler 1: Palette Contrast -->
+        <div class="slider-group">
+          <div class="slider-label">
+            <label for="palette-contrast-slider">Palette Contrast</label>
+            <span id="palette-contrast-value">50%</span>
+          </div>
+          <input type="range" id="palette-contrast-slider" class="slider" min="0" max="100" value="50" step="1">
+        </div>
+        <!-- Regler 2: Palette Brightness -->
+        <div class="slider-group">
+          <div class="slider-label">
+            <label for="palette-brightness-slider">Palette Brightness</label>
+            <span id="palette-brightness-value">50%</span> <!-- Label, das per JS aktualisiert wird -->
+          </div>
+          <input type="range" id="palette-brightness-slider" class="slider" min="0" max="100" value="50" step="1">
+        </div>
+        <!-- Regler 3: Surface Tint -->
+        <div class="slider-group">
+          <div class="slider-label">
+            <label for="surface-tint-slider">Surface Tint</label>
+            <span id="surface-tint-value">50%</span>
+          </div>
+          <input type="range" id="surface-tint-slider" class="slider" min="0" max="100" value="50" step="1">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Vertikale Trennlinie -->
+    <div class="vertical-divider"></div>
+    
+    <!-- SPALTE 4: WCAG -->
+    <div class="wcag-column">
+        <h2 style="margin-bottom: -4px;">WCAG Contrast</h2>
+        <div class="wcag-contrast-group" style="margin-top: 8px;">
+          <label class="wcag-label" style="display: none;">WCAG Contrast</label>
+          <!-- Radio-Buttons für AA vs AAA -->
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" id="wcag-aa" name="wcag" value="4.5" checked> <!-- checked = Standardauswahl -->
+              AA (4.5 : 1)
+            </label>
+            <label class="radio-label">
+              <input type="radio" id="wcag-aaa" name="wcag" value="7.0">
+              AAA (7 : 1)
+            </label>
+          </div>
+        </div>
+    </div>
+  </div>
+  
+  <!-- 3. Unterer Vorschau-Bereich -->
+  <div class="preview-container">
+    <!-- Tab-Reiter -->
+    <div class="tabs-header">
+      <div class="tab active" data-tab="system-tokens"><span>System Tokens</span></div>
+      <div class="tab" data-tab="palettes"><span>Palettes</span></div>
+      <div class="tab" data-tab="tokens-json"><span>Tokens Studio JSON</span></div>
+      <div class="tab" data-tab="guidelines"><span>Guidelines.md</span></div>
+    </div>
+
+    <!-- Tab-Inhalte -->
+    <div class="tab-content">
+      
+      <!-- Panel 1: System Tokens (die Haupt-Vorschau) -->
+      <div id="system-tokens" class="tab-panel active">
+        <div class="preview-grid">
+          
+          <!-- Sektion: Primary -->
+          <div class="preview-section" data-token-group="primary">
+            <div class="heading-3"><h3>Primary</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <!-- Zeile: primary -->
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary.dark"></div></div>
+                <div class="color-name">primary</div>
+              </div>
+              <!-- Zeile: on-primary -->
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-primary</div>
+              </div>
+              <!-- Zeile: primary-container -->
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary-container.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary-container.dark"></div></div>
+                <div class="color-name">primary-container</div>
+              </div>
+              <!-- Zeile: on-primary-container -->
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary-container.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary-container.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-primary-container</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sektion: Secondary (Struktur wie Primary) -->
+          <div class="preview-section" data-token-group="secondary">
+            <div class="heading-3"><h3>Secondary</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/secondary.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/secondary.dark"></div></div>
+                <div class="color-name">secondary</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/on-secondary.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/on-secondary.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-secondary</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/secondary-container.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/secondary-container.dark"></div></div>
+                <div class="color-name">secondary-container</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/on-secondary-container.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/secondary/on-secondary-container.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-secondary-container</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sektion: Tertiary (Struktur wie Primary) -->
+          <div class="preview-section" data-token-group="tertiary">
+            <div class="heading-3"><h3>Tertiary</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/tertiary.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/tertiary.dark"></div></div>
+                <div class="color-name">tertiary</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/on-tertiary.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/on-tertiary.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-tertiary</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/tertiary-container.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/tertiary-container.dark"></div></div>
+                <div class="color-name">tertiary-container</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/on-tertiary-container.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/tertiary/on-tertiary-container.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-tertiary-container</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sektion: Surface (Hintergründe) -->
+          <div class="preview-section" data-token-group="surface">
+            <div class="heading-3"><h3>Surface</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/surface-lowest.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/surface-lowest.dark"></div></div>
+                <div class="color-name">surface-lowest</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/surface.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/surface.dark"></div></div>
+                <div class="color-name">surface</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/surface-variant.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/surface-variant.dark"></div></div>
+                <div class="color-name">surface-variant</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/on-surface.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/on-surface.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-surface</div>
+              </div>
+               <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/on-surface-variant.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/surface/on-surface-variant.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-surface-variant</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sektion: Other (Ränder, Schatten) -->
+          <div class="preview-section" data-token-group="other">
+            <div class="heading-3"><h3>Other</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/outline.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/outline.dark"></div></div>
+                <div class="color-name">outline</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/outline-variant.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/outline-variant.dark"></div></div>
+                <div class="color-name">outline-variant</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/shadow.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/shadow.dark"></div></div>
+                <div class="color-name">shadow</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/overlay.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="base/other/overlay.dark"></div></div>
+                <div class="color-name">overlay</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sektion: Error (Struktur wie Primary) -->
+          <div class="preview-section" data-token-group="error">
+            <div class="heading-3"><h3>Error</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/error.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/error.dark"></div></div>
+                <div class="color-name">error</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/on-error.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/on-error.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-error</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/error-container.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/error-container.dark"></div></div>
+                <div class="color-name">error-container</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/on-error-container.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/error/on-error-container.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-error-container</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sektion: Success (Struktur wie Primary) -->
+          <div class="preview-section" data-token-group="success">
+            <div class="heading-3"><h3>Success</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/success.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/success.dark"></div></div>
+                <div class="color-name">success</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/on-success.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/on-success.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-success</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/success-container.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/success-container.dark"></div></div>
+                <div class="color-name">success-container</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/on-success-container.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/success/on-success-container.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-success-container</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sektion: Info (Struktur wie Primary) -->
+          <div class="preview-section" data-token-group="info">
+            <div class="heading-3"><h3>Info</h3></div>
+            <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
+            <div class="color-grid">
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/info.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/info.dark"></div></div>
+                <div class="color-name">info</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/on-info.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/on-info.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-info</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/info-container.light"></div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/info-container.dark"></div></div>
+                <div class="color-name">info-container</div>
+              </div>
+              <div class="color-row">
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/on-info-container.light"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="feedback/info/on-info-container.dark"></div> <div class="wcag-warning">!</div></div>
+                <div class="color-name">on-info-container</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Panel 2: Palettes (wird dynamisch mit JS gefüllt) -->
+      <div id="palettes" class="tab-panel">
+        <div class="palette-grid">
+          <!-- Palette content will be generated dynamically -->
+        </div>
+      </div>
+
+      <!-- Panel 3: Tokens Studio JSON (Code-Ausgabe) -->
+      <div id="tokens-json" class="tab-panel">
+        <div class="code-container">
+          <button id="copy-json" class="copy-button">Copy</button>
+          <pre><code id="json-output"></code></pre>
+        </div>
+      </div>
+
+      <!-- Panel 4: Guidelines.md (Code-Ausgabe) -->
+      <div id="guidelines" class="tab-panel">
+        <div class="code-container">
+          <button id="copy-md" class="copy-button">Copy</button>
+          <pre><code id="md-output"></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===== JavaScript START ===== -->
+
+  <!-- Lädt die 'chroma.js' Bibliothek, die für alle Farbberechnungen (Mischen, Kontrast, etc.) benötigt wird -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
+
+  <script>
+    // --- Globale Referenzen ---
+    // Hier speichern wir Verweise auf alle wichtigen HTML-Elemente, 
+    // damit wir nicht ständig `document.getElementById` aufrufen müssen.
+    
+    // Regler und ihre Wert-Anzeigen
+    const paletteContrastSlider = document.getElementById('palette-contrast-slider');
+    const paletteContrastValueLabel = document.getElementById('palette-contrast-value');
+    const paletteBrightnessSlider = document.getElementById('palette-brightness-slider');
+    const paletteBrightnessValueLabel = document.getElementById('palette-brightness-value');
+    const surfaceTintSlider = document.getElementById('surface-tint-slider');
+    const surfaceTintValueLabel = document.getElementById('surface-tint-value');
+    
+    // WCAG Radio-Buttons
+    const wcagRadioAA = document.getElementById('wcag-aa');
+    const wcagRadioAAA = document.getElementById('wcag-aaa');
+    
+    // Obere Leiste
+    const importSelect = document.getElementById('import-existing-select');
+    const themeNameInput = document.getElementById('theme-name');
+    const generateButton = document.getElementById('generate-button');
+    const generateButtonText = document.getElementById('generate-button-text'); // Der Text im Button
+
+    // Code-Ausgabe-Elemente
+    const paletteContainer = document.getElementById('palettes').querySelector('.palette-grid');
+    const jsonOutputEl = document.getElementById('json-output');
+    const mdOutputEl = document.getElementById('md-output');
+    const copyJsonButton = document.getElementById('copy-json');
+    const copyMdButton = document.getElementById('copy-md');
+    
+    // Color Picker & Hex-Felder
+    const switchButton = document.getElementById('switch-button');
+    const randomButton = document.getElementById('random-button');
+    
+    // Speichert die Picker und Hex-Felder in Objekten für einfachen Zugriff
+    const pickers = {
+      primary: document.getElementById('primary-color-picker'),
+      secondary: document.getElementById('secondary-color-picker'),
+      tertiary: document.getElementById('tertiary-color-picker')
+    };
+    const hexInputs = {
+      primary: document.getElementById('primary-hex-input'),
+      secondary: document.getElementById('secondary-hex-input'),
+      tertiary: document.getElementById('tertiary-hex-input')
+    };
+
+    // --- Konstanten & Definitionen ---
+    // Diese Werte definieren, wie die Farb-Logik funktioniert.
+
+    // Alle Stufen in einer Farbskala (Palette)
+    const scaleKeys = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+    const paletteScaleKeys = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]; // Ohne '0' (Weiß)
+
+    // Statische Basisfarben für Feedback-Paletten (Error, Success, Info)
+    const neutralDarkest = '#1a1a1a';
+    const feedbackBases = { cool: { red: '#C40034', green: '#00B84C', blue: '#0090C4' }, warm: { red: '#C42700', green: '#49A800', blue: '#0052C4' } };
+    const HUE_COOLEST = 230; // Blauer Farbton
+    const HUE_WARMEST = 70;  // Oranger Farbton
+
+    // WCAG Kontrast-Mindestwerte
+    const WCAG_AA_MINIMUM = 4.5;
+    const WCAG_AAA_MINIMUM = 7.0;
+    const WCAG_FAIL_MINIMUM = 4.5; // Zeigt Warnung, wenn selbst AA nicht erreicht wird
+
+    // --- Token-Definitionen (Rezepte) ---
+
+    // Definiert, welche "On"-Farbe zu welcher Hintergrundfarbe gehört
+    // (z.B. 'on-primary' wird auf 'primary' geprüft)
+    const onTokenBackgroundMap = {
+        'accent/primary/on-primary': 'accent/primary/primary', 'accent/primary/on-primary-container': 'accent/primary/primary-container',
+        'accent/secondary/on-secondary': 'accent/secondary/secondary', 'accent/secondary/on-secondary-container': 'accent/secondary/secondary-container',
+        'accent/tertiary/on-tertiary': 'accent/tertiary/tertiary', 'accent/tertiary/on-tertiary-container': 'accent/tertiary/tertiary-container',
+        'base/surface/on-surface': 'base/surface/surface', 'base/surface/on-surface-variant': 'base/surface/surface-variant',
+        'feedback/error/on-error': 'feedback/error/error', 'feedback/error/on-error-container': 'feedback/error/error-container',
+        'feedback/success/on-success': 'feedback/success/success', 'feedback/success/on-success-container': 'feedback/success/success-container',
+        'feedback/info/on-info': 'feedback/info/info', 'feedback/info/on-info-container': 'feedback/info/info-container'
+    };
+
+    // Liste aller Tokens, die vom "Surface Tint"-Regler beeinflusst werden
+    const tintableTokens = [
+      'base/surface/surface-lowest', 'base.surface/surface', 'base/surface/surface-variant',
+      'base/other/outline', 'base/other/outline-variant', 'base/other/shadow', 'base/other/overlay'
+    ];
+
+    // Rezept für den LIGHT MODE.
+    // Definiert, welche Paletten-Stufe für welchen System-Token verwendet wird.
+    // (z.B. 'primary' im Light Mode ist 'palettes.primary.500')
+    const lightRecipeAliasMap = {
+        'accent/primary/primary': '{palettes.primary.500}',
+        'accent/primary/on-primary': '{palettes.neutral.0}',
+        'accent/primary/primary-container': '{palettes.primary.50}',
+        'accent/primary/on-primary-container': '{palettes.primary.900}',
+        'accent/secondary/secondary': '{palettes.secondary.500}',
+        'accent/secondary/on-secondary': '{palettes.neutral.0}',
+        'accent/secondary/secondary-container': '{palettes.secondary.50}',
+        'accent/secondary/on-secondary-container': '{palettes.secondary.900}',
+        'accent/tertiary/tertiary': '{palettes.tertiary.500}',
+        'accent/tertiary/on-tertiary': '{palettes.neutral.0}',
+        'accent/tertiary/tertiary-container': '{palettes.tertiary.50}',
+        'accent/tertiary/on-tertiary-container': '{palettes.tertiary.900}',
+        'base/surface/surface-lowest': '{palettes.neutral.50}', 
+        'base/surface/surface': '{palettes.neutral.0}',
+        'base/surface/surface-variant': '{palettes.neutral.100}',
+        'base/surface/on-surface': '{palettes.neutral.900}',
+        'base/surface/on-surface-variant': '{palettes.neutral.700}',
+        'base/other/outline': '{palettes.neutral.400}',
+        'base/other/outline-variant': '{palettes.neutral.200}',
+        'base/other/shadow': '{palettes.neutral.900}',
+        'base/other/overlay': '{palettes.neutral.900}',
+        'feedback/error/error': '{palettes.error.600}',
+        'feedback/error/on-error': '{palettes.neutral.0}',
+        'feedback/error/error-container': '{palettes.error.50}',
+        'feedback/error/on-error-container': '{palettes.error.900}',
+        'feedback/success/success': '{palettes.success.600}',
+        'feedback/success/on-success': '{palettes.neutral.0}',
+        'feedback/success/success-container': '{palettes.success.50}',
+        'feedback/success/on-success-container': '{palettes.success.900}',
+        'feedback/info/info': '{palettes.info.600}',
+        'feedback/info/on-info': '{palettes.neutral.0}',
+        'feedback/info/info-container': '{palettes.info.50}',
+        'feedback/info/on-info-container': '{palettes.info.900}'
+    };
+
+    // Rezept für den DARK MODE.
+    const darkRecipeAliasMap = {
+        'accent/primary/primary': '{palettes.primary.300}',
+        'accent/primary/on-primary': '{palettes.primary.900}',
+        'accent/primary/primary-container': '{palettes.primary.800}',
+        'accent/primary/on-primary-container': '{palettes.primary.50}',
+        'accent/secondary/secondary': '{palettes.secondary.300}',
+        'accent/secondary/on-secondary': '{palettes.secondary.900}',
+        'accent/secondary/secondary-container': '{palettes.secondary.800}',
+        'accent/secondary/on-secondary-container': '{palettes.secondary.50}',
+        'accent/tertiary/tertiary': '{palettes.tertiary.300}',
+        'accent/tertiary/on-tertiary': '{palettes.tertiary.900}',
+        'accent/tertiary/tertiary-container': '{palettes.tertiary.800}',
+        'accent/tertiary/on-tertiary-container': '{palettes.tertiary.50}',
+        'base/surface/surface-lowest': '{palettes.neutral.900}', 
+        'base/surface/surface': '{palettes.neutral.800}',
+        'base/surface/surface-variant': '{palettes.neutral.700}',
+        'base/surface/on-surface': '{palettes.neutral.50}',
+        'base/surface/on-surface-variant': '{palettes.neutral.200}',
+        'base/other/outline': '{palettes.neutral.500}',
+        'base/other/outline-variant': '{palettes.neutral.700}',
+        'base/other/shadow': '{palettes.neutral.900}',
+        'base/other/overlay': '{palettes.neutral.900}',
+        'feedback/error/error': '{palettes.error.300}',
+        'feedback/error/on-error': '{palettes.error.900}',
+        'feedback/error/error-container': '{palettes.error.800}',
+        'feedback/error/on-error-container': '{palettes.error.50}',
+        'feedback/success/success': '{palettes.success.300}',
+        'feedback/success/on-success': '{palettes.success.900}',
+        'feedback/success/success-container': '{palettes.success.800}',
+        'feedback/success/on-success-container': '{palettes.success.50}',
+        'feedback/info/info': '{palettes.info.300}',
+        'feedback/info/on-info': '{palettes.info.900}',
+        'feedback/info/info-container': '{palettes.info.800}',
+        'feedback/info/on-info-container': '{palettes.info.50}'
+    };
+    
+    // --- Hilfsfunktionen (Utilities) ---
+    
+    /**
+     * Setzt den Wert eines Farbwählers UND des zugehörigen HEX-Textfelds.
+     * @param {string} idPrefix - "primary", "secondary", or "tertiary"
+     * @param {string} hexValue - Ein gültiger HEX-Farbcode
+     */
+    function setPickerColor(idPrefix, hexValue) {
+      const picker = pickers[idPrefix]; // Holt <input type="color">
+      const hexInput = hexInputs[idPrefix]; // Holt <input type="text">
+      if (picker && hexInput) {
+          // Stellt sicher, dass die Farbe gültig ist, bevor sie gesetzt wird
+          const validHex = chroma.valid(hexValue) ? chroma(hexValue).hex() : '#000000';
+          picker.value = validHex;
+          hexInput.value = validHex.toUpperCase();
+      }
+    }
+    
+    /**
+     * Synchronisiert einen <input type="color"> mit einem <input type="text">
+     * in beide Richtungen.
+     * @param {string} idPrefix - "primary", "secondary", or "tertiary"
+     */
+    function syncHexAndPicker(idPrefix) {
+        const picker = pickers[idPrefix];
+        const hexInput = hexInputs[idPrefix];
+        if (!picker || !hexInput) return;
+
+        // 1. Wenn der Farbwähler (Picker) geändert wird -> aktualisiere das Textfeld
+        picker.addEventListener('input', () => {
+            hexInput.value = picker.value.toUpperCase();
+            updateAllPreviews(); // Aktualisiere sofort die gesamte Vorschau
+        });
+
+        // 2. Wenn im Textfeld getippt wird -> aktualisiere den Picker (sofern gültig)
+        hexInput.addEventListener('input', () => {
+            const val = hexInput.value.startsWith('#') ? hexInput.value : '#' + hexInput.value;
+            if (chroma.valid(val)) {
+                picker.value = val;
+                updateAllPreviews(); // Aktualisiere sofort die gesamte Vorschau
+            }
+        });
+        
+        // 3. Wenn der Fokus das Textfeld verlässt -> formatiere den Wert sauber
+        hexInput.addEventListener('change', () => {
+            const val = hexInput.value.startsWith('#') ? hexInput.value : '#' + hexInput.value;
+            if (chroma.valid(val)) {
+                // Konvertiert z.B. "#F0C" zu "#FF00CC" oder "abc" zu "#AABBCC"
+                const validHex = chroma(val).hex().toUpperCase();
+                hexInput.value = validHex;
+                picker.value = validHex;
+            } else {
+                // Bei ungültiger Eingabe (z.B. "#GHIJKL"), setze auf den letzten gültigen Wert zurück
+                hexInput.value = picker.value.toUpperCase();
+            }
+        });
+    }
+    
+    /**
+     * Logik für den "Switch"-Button.
+     * Tauscht die Farben: P -> S, S -> T, T -> P
+     */
+    function switchColors() {
+        const pVal = pickers.primary.value;
+        const sVal = pickers.secondary.value;
+        const tVal = pickers.tertiary.value;
+        
+        setPickerColor('primary', sVal);
+        setPickerColor('secondary', tVal);
+        setPickerColor('tertiary', pVal);
+        
+        updateAllPreviews(); // Wichtig: Vorschau nach der Änderung aktualisieren
+    }
+    
+    /**
+     * Logik für den "Random"-Button.
+     * Generiert drei neue, zufällige Farben.
+     */
+    function randomizeColors() {
+        setPickerColor('primary', chroma.random().hex());
+        setPickerColor('secondary', chroma.random().hex());
+        setPickerColor('tertiary', chroma.random().hex());
+        
+        updateAllPreviews(); // Wichtig: Vorschau nach der Änderung aktualisieren
+    }
+
+    /**
+     * Hilfsfunktion, um einen Wert in einem verschachtelten Objekt zu setzen.
+     * z.B. setNestedObjectValue(obj, 'a/b/c', 10) -> obj = {a: {b: {c: 10}}}
+     */
+    function setNestedObjectValue(obj, pathStr, value) {
+        const keys = pathStr.split('/'); let current = obj;
+        for (let i = 0; i < keys.length - 1; i++) { const key = keys[i]; current[key] = current[key] || {}; current = current[key]; }
+        current[keys[keys.length - 1]] = value;
+    }
+
+    /**
+     * Kopiert den Inhalt eines <pre><code> Blocks in die Zwischenablage.
+     */
+    function copyToClipboard(element, button) {
+        if (!element || !element.textContent) return;
+        navigator.clipboard.writeText(element.textContent).then(() => {
+            const originalText = button.textContent;
+            button.textContent = 'Copied!'; // Visuelles Feedback
+            setTimeout(() => { button.textContent = originalText; }, 1500); // Zurücksetzen
+        }).catch(err => console.error('Failed to copy text: ', err));
+    }
+    
+    // --- Kernlogik: Farb-Generierung ---
+
+    /**
+     * Erzeugt eine 10-stufige Farbskala (50-900) aus einer Basisfarbe.
+     * @param {string} baseColor - Die Basisfarbe (z.B. primary.500)
+     * @param {number} contrastValue - Wert von 0-100 (aus dem Regler)
+     * @param {number} brightnessValue - Wert von 0-100 (aus dem Regler)
+     * @returns {object} Ein Objekt mit Farbstufen (z.B. { 50: '#...', 100: '#...' })
+     */
+    function generateBrandScale(baseColor, contrastValue = 50, brightnessValue = 50) {
+       try {
+        const scale = {};
+        
+        // 1. Helligkeit anpassen (0-100 -> -1 bis +1)
+        const brightnessFactor = (brightnessValue - 50) / 50;
+        // Basisfarbe leicht aufhellen oder abdunkeln
+        const base = chroma(baseColor).brighten(brightnessFactor * 0.5);
+
+        // 2. Kontrast/Spreizung anpassen (0-100 -> -1 bis +1)
+        const contrastFactor = (contrastValue - 50) / 50;
+        const tint_mult = 1 + (contrastFactor * 0.4); // Multiplikator für helle Töne
+        const shade_mult = 1 + (contrastFactor * 0.6); // Multiplikator für dunkle Töne
+        
+        // Hilfsfunktion, um extreme Werte (zu nah an weiß/schwarz) zu vermeiden
+        const clampMix = (val) => Math.max(0.01, Math.min(val, 0.99));
+
+        // 3. Skala berechnen (Mischen mit Weiß oder Schwarz)
+        scale[400] = base.mix('#ffffff', clampMix(0.2 * tint_mult)).hex();
+        scale[300] = base.mix('#ffffff', clampMix(0.4 * tint_mult)).hex();
+        scale[200] = base.mix('#ffffff', clampMix(0.6 * tint_mult)).hex();
+        scale[100] = base.mix('#ffffff', clampMix(0.8 * tint_mult)).hex();
+        scale[50]  = base.mix('#ffffff', clampMix(0.9 * tint_mult)).hex();
+        scale[500] = base.hex(); // Die (angepasste) Basisfarbe
+        scale[600] = base.mix('#000000', clampMix(0.15 * shade_mult)).hex();
+        scale[700] = base.mix('#000000', clampMix(0.35 * shade_mult)).hex();
+        scale[800] = base.mix('#000000', clampMix(0.55 * shade_mult)).hex();
+        scale[900] = base.mix('#000000', clampMix(0.75 * shade_mult)).hex();
+        return scale;
+      } catch (e) { 
+        console.error("Error generating brand scale", e);
+        // Fallback-Skala bei einem Fehler
+        return { 50: '#F0F0F0', 100: '#E0E0E0', 200: '#C0C0C0', 300: '#A0A0A0', 400: '#808080', 500: '#606060', 600: '#404040', 700: '#303030', 800: '#202020', 900: '#101010' }; 
+      }
+    }
+    
+    /**
+     * Erzeugt die Neutral-Skala (Grautöne).
+     * Passt den hellsten und dunkelsten Punkt basierend auf Kontrast und Helligkeit an.
+     */
+    function generateNeutralScale(darkest = '#1a1a1a', contrastValue = 50, brightnessValue = 50) {
+       const scale = {};
+       const contrastFactor = (contrastValue - 50) / 50;
+       const brightnessFactor = (brightnessValue - 50) / 50;
+       
+       // Passt den hellsten Punkt an
+       const lightest_adj = chroma('#F5F5F5')
+            .darken(contrastFactor * 0.5) // Mehr Kontrast = dunkleres Hell
+            .brighten(brightnessFactor * 0.3); // Mehr Helligkeit = helleres Hell
+       
+       // Passt den dunkelsten Punkt an
+       const darkest_adj = chroma(darkest)
+            .darken(contrastFactor * 0.6) // Mehr Kontrast = dunkleres Dunkel
+            .brighten(brightnessFactor * 0.5); // Mehr Helligkeit = helleres Dunkel
+       
+       // Erzeugt einen Farbverlauf (Ramp) zwischen den angepassten Endpunkten
+       const ramp = chroma.scale([lightest_adj, darkest_adj]).mode('lch').colors(10);
+       
+       paletteScaleKeys.forEach((key, index) => scale[key] = ramp[index]);
+       scale[0] = '#ffffff'; // Stufe 0 ist *immer* reines Weiß
+       return scale;
+    }
+    
+    /**
+     * Hauptfunktion zur Generierung *aller* Paletten (Primary, Secondary, Neutral, etc.)
+     * basierend auf den aktuellen UI-Einstellungen.
+     */
+    function generateAllScales(paletteContrastValue, paletteBrightnessValue) {
+      const primaryHex = pickers.primary.value;
+      const secondaryHex = pickers.secondary.value;
+      const tertiaryHex = pickers.tertiary.value;
+      
+      // Berechnet den durchschnittlichen Farbton (Hue) der Key-Colors
+      let avgLchHue = 0; let validHues = 0; 
+      try { if (chroma.valid(primaryHex)) { avgLchHue += chroma(primaryHex).get('lch.h'); validHues++; } } catch {} 
+      try { if (chroma.valid(secondaryHex)) { avgLchHue += chroma(secondaryHex).get('lch.h'); validHues++; } } catch {}
+      
+      if (validHues > 0) { avgLchHue /= validHues; } else { avgLchHue = 180; } // Fallback
+      
+      // Berechnet einen "Temperatur-Faktor" (0 = kühl, 1 = warm)
+      let tempFactor = 0.5; 
+      const hueRange = HUE_COOLEST - HUE_WARMEST; 
+      if (hueRange !== 0) { 
+          tempFactor = (HUE_COOLEST - avgLchHue) / hueRange; 
+          tempFactor = Math.max(0, Math.min(1, tempFactor)); // Klemmt Wert zwischen 0 und 1
+      }
+      
+      // Mischt die Feedback-Farben basierend auf der Temperatur
+      // (z.B. ein warmes Theme bekommt ein wärmeres Rot als ein kühles Theme)
+      const errorBaseInterpolated = chroma.mix(feedbackBases.cool.red, feedbackBases.warm.red, tempFactor, 'lch').hex();
+      const successBaseInterpolated = chroma.mix(feedbackBases.cool.green, feedbackBases.warm.green, tempFactor, 'lch').hex();
+      const infoBaseInterpolated = chroma.mix(feedbackBases.cool.blue, feedbackBases.warm.blue, tempFactor, 'lch').hex();
+      
+      // Ruft die Skalen-Generatoren für alle Paletten auf
+      return {
+        primary: generateBrandScale(primaryHex, paletteContrastValue, paletteBrightnessValue),
+        secondary: generateBrandScale(secondaryHex, paletteContrastValue, paletteBrightnessValue),
+        tertiary: generateBrandScale(tertiaryHex, paletteContrastValue, paletteBrightnessValue),
+        neutral: generateNeutralScale(neutralDarkest, paletteContrastValue, paletteBrightnessValue),
+        error: generateBrandScale(errorBaseInterpolated, paletteContrastValue, paletteBrightnessValue),
+        success: generateBrandScale(successBaseInterpolated, paletteContrastValue, paletteBrightnessValue),
+        info: generateBrandScale(infoBaseInterpolated, paletteContrastValue, paletteBrightnessValue)
+      };
+    }
+
+    /**
+     * Stellt den WCAG-Kontrast sicher.
+     * Prüft 'preferred' (z.B. Weiß) auf 'background'. Wenn es fehlschlägt,
+     * prüft es 'fallback' (z.B. Schwarz).
+     * @returns {object} { color, contrast, pass }
+     */
+    function ensureContrast(background, preferred, fallback, targetContrastRatio) {
+       try {
+        const bgValid = chroma.valid(background) ? background : '#FFFFFF';
+        const prefValid = chroma.valid(preferred) ? preferred : '#000000';
+        const fallValid = chroma.valid(fallback) ? fallback : '#000000';
+
+        // 1. Prüfe bevorzugte Farbe
+        const prefContrast = chroma.contrast(bgValid, prefValid);
+        if (prefContrast >= targetContrastRatio) { 
+            return { color: prefValid, contrast: prefContrast, pass: true }; 
+        }
+        
+        // 2. Bevorzugte Farbe fehlgeschlagen, prüfe Fallback-Farbe
+        const fallbackContrast = chroma.contrast(bgValid, fallValid);
+        if (fallbackContrast >= targetContrastRatio) {
+            return { color: fallValid, contrast: fallbackContrast, pass: true };
+        }
+
+        // 3. Beide fehlgeschlagen. Nimm die mit dem *besseren* Kontrast.
+        if (fallbackContrast > prefContrast) {
+             return { color: fallValid, contrast: fallbackContrast, pass: false };
+        }
+        return { color: prefValid, contrast: prefContrast, pass: false };
+
+      } catch (e) { 
+        console.error("Error in ensureContrast:", e); 
+        return { color: fallback, contrast: 0, pass: false }; 
+      }
+    }
+
+    /**
+     * Wendet die Rezepte (Alias Maps) auf die generierten Paletten an.
+     * Führt 3 Schritte aus:
+     * 1. Aliase auflösen (z.B. '{palettes.primary.500}' -> '#2E86AB')
+     * 2. Surface Tinting anwenden (Farben mit der Primary-Farbe mischen)
+     * 3. WCAG-Kontrast für "On"-Farben sicherstellen
+     * @returns {object} { lightRecipe, darkRecipe, wcagWarnings }
+     */
+    function getResolvedRecipes(palettes, surfaceTintValue, targetContrastRatio) {
+        const lightRecipe = {};
+        const darkRecipe = {};
+        const wcagWarnings = []; // Liste der Tokens, die den Kontrast-Test nicht bestehen
+
+        const primaryTintBase = palettes.primary['500'] || '#6750A4';
+        const tintFactor = surfaceTintValue / 100; // 0 bis 1
+
+        // Hilfsfunktion, um Alias-Strings (z.B. '{palettes.primary.500}')
+        // in echte HEX-Werte aus dem 'palettes'-Objekt umzuwandeln.
+        const resolveAlias = (alias) => {
+            if (typeof alias !== 'string') { 
+                console.warn("resolveAlias received non-string:", alias);
+                return '#FF00FF'; // Fehlerfarbe
+            }
+            const placeholder = alias.replace(/[{}]/g, ''); // "palettes.primary.500"
+            const parts = placeholder.split('.'); // ['palettes', 'primary', '500']
+            if (parts.length === 3 && palettes[parts[1]] && palettes[parts[1]][parts[2]]) {
+                return palettes[parts[1]][parts[2]]; // Holt den HEX-Wert
+            }
+            console.warn("Could not resolve alias:", alias);
+            return '#FF00FF'; // Fehlerfarbe
+        };
+
+        // 1. Aliase auflösen
+        for (const key in lightRecipeAliasMap) {
+            lightRecipe[key] = resolveAlias(lightRecipeAliasMap[key]);
+        }
+        for (const key in darkRecipeAliasMap) {
+            darkRecipe[key] = resolveAlias(darkRecipeAliasMap[key]);
+        }
+
+        // 2. Surface Tinting anwenden
+        if (tintFactor > 0) {
+            for (const key of tintableTokens) {
+                // Unterschiedliche Stärken für 'surface' vs. andere Tokens
+                let lightTintMultiplier = (key === 'base/surface/surface') ? 0.04 : 0.1;
+                let darkTintMultiplier = (key === 'base/surface/surface') ? 0.06 : 0.15;
+
+                if (lightRecipe[key]) {
+                    lightRecipe[key] = chroma.mix(lightRecipe[key], primaryTintBase, tintFactor * lightTintMultiplier, 'lch').hex();
+                }
+                if (darkRecipe[key]) {
+                   darkRecipe[key] = chroma.mix(darkRecipe[key], primaryTintBase, tintFactor * darkTintMultiplier, 'lch').hex();
+                }
+            }
+        }
+        
+        // 3. WCAG-Kontrast sicherstellen
+        for (const onKey in onTokenBackgroundMap) {
+            const bgKey = onTokenBackgroundMap[onKey]; // Finde den zugehörigen Hintergrund
+            
+            // --- Light Mode Check ---
+            const onPrefLight = resolveAlias(lightRecipeAliasMap[onKey]);
+            const onFallLight = onPrefLight === palettes.neutral[0] ? palettes.neutral[900] : palettes.neutral[0]; // (Weiß -> Schwarz, Schwarz -> Weiß)
+            const bgLight = lightRecipe[bgKey]; // Nimm den bereits getönten Hintergrund
+            
+            const lightResult = ensureContrast(bgLight, onPrefLight, onFallLight, targetContrastRatio);
+            lightRecipe[onKey] = lightResult.color;
+            if (chroma.contrast(lightRecipe[onKey], bgLight) < WCAG_FAIL_MINIMUM) {
+                wcagWarnings.push(onKey + '.light'); // Für die '!' Warnung
+            }
+            
+            // --- Dark Mode Check ---
+            const onPrefDark = resolveAlias(darkRecipeAliasMap[onKey]);
+            const onFallDark = onPrefDark === palettes.neutral[0] ? palettes.neutral[900] : palettes.neutral[0];
+            const bgDark = darkRecipe[bgKey];
+            
+            const darkResult = ensureContrast(bgDark, onPrefDark, onFallDark, targetContrastRatio);
+            darkRecipe[onKey] = darkResult.color;
+            if (chroma.contrast(darkRecipe[onKey], bgDark) < WCAG_FAIL_MINIMUM) {
+                 wcagWarnings.push(onKey + '.dark');
+            }
+        }
+
+        return { lightRecipe, darkRecipe, wcagWarnings };
+    }
+
+    // --- UI Update-Funktionen ---
+    // Diese Funktionen aktualisieren die Vorschau-Tabs (Palettes, JSON, MD)
+
+    /**
+     * Füllt den "Palettes"-Tab dynamisch mit den Farbskalen.
+     */
+    function populatePalettesTab(palettes) {
+        if (!paletteContainer) return;
+        paletteContainer.innerHTML = ''; // Leert den Inhalt
+        
+        for (const name in palettes) {
+            const scale = palettes[name];
+            const row = document.createElement('div');
+            row.className = 'palette-row';
+            
+            const nameEl = document.createElement('div');
+            nameEl.className = 'palette-name';
+            nameEl.textContent = name;
+            row.appendChild(nameEl);
+            
+            const scaleEl = document.createElement('div');
+            scaleEl.className = 'palette-scale';
+            
+            const keysToUse = (name === 'neutral') ? scaleKeys : paletteScaleKeys;
+            
+            for (const key of keysToUse) {
+                const color = scale[key];
+                const swatch = document.createElement('div');
+                swatch.className = 'palette-swatch';
+                swatch.style.backgroundColor = color;
+                swatch.textContent = key;
+                // Prüft, ob der Text hell sein muss (für dunkle Hintergründe)
+                if (chroma.contrast(color, '#000000') < 4.5) {
+                    swatch.classList.add('light-text');
+                }
+                scaleEl.appendChild(swatch);
+            }
+            row.appendChild(scaleEl);
+            paletteContainer.appendChild(row);
+        }
+    }
+    
+    /**
+     * Generiert den JSON-Output für den "Tokens Studio JSON"-Tab.
+     */
+    function generateTokensJSON(palettes) {
+        if (!jsonOutputEl) return;
+        
+        const output = {
+            palettes: {},
+            light: {},
+            dark: {}
+        };
+        
+        output.palettes = palettes; // Fügt die Roh-Paletten hinzu
+        
+        // Fügt die Light-Mode-Rezepte (Aliase) hinzu
+        for (const key in lightRecipeAliasMap) {
+            const alias = lightRecipeAliasMap[key];
+            const tsPath = key.replace(/\//g, '.'); // Wandelt "a/b/c" in "a.b.c" um
+            setNestedObjectValue(output.light, tsPath, alias);
+        }
+        
+        // Fügt die Dark-Mode-Rezepte (Aliase) hinzu
+        for (const key in darkRecipeAliasMap) {
+            const alias = darkRecipeAliasMap[key];
+            const tsPath = key.replace(/\//g, '.');
+            setNestedObjectValue(output.dark, tsPath, alias);
+        }
+        
+        jsonOutputEl.textContent = JSON.stringify(output, null, 2); // Formatiert als JSON
+    }
+    
+    /**
+     * Generiert den Markdown-Output für den "Guidelines.md"-Tab.
+     */
+    function generateGuidelinesMD(palettes, lightRecipe, darkRecipe) {
+        if (!mdOutputEl) return;
+        let md = `# ${themeNameInput.value || 'My Theme'} Guidelines\n\n`;
+        md += "## Color Palettes\n\n";
+
+        // Paletten-Tabelle
+        for (const name in palettes) {
+            md += `### ${name.charAt(0).toUpperCase() + name.slice(1)} Palette\n\n`;
+            md += "| Name | Hex | Swatch |\n";
+            md += "| :--- | :--- | :--- |\n";
+            const keysToUse = (name === 'neutral') ? scaleKeys : paletteScaleKeys;
+            for (const key of keysToUse) {
+                const color = palettes[name][key];
+                // Verwendet einen Platzhalter-Bild-Service, um Farbfelder in MD anzuzeigen
+                md += `| ${name}-${key} | \`${color}\` | <img src="https://placehold.co/24x24/${color.substring(1)}/${color.substring(1)}" alt="${color}" width="24" height="24"> |\n`;
+            }
+            md += "\n";
+        }
+        
+        // System-Token-Tabelle
+        md += "## System Tokens\n\n";
+        md += "| Token Name | Light Mode | Dark Mode |\n";
+        md += "| :--- | :--- | :--- |\n";
+        
+        const allKeys = new Set([...Object.keys(lightRecipe), ...Object.keys(darkRecipe)]);
+        const sortedKeys = Array.from(allKeys).sort();
+        
+        for (const key of sortedKeys) {
+            const lightColor = lightRecipe[key] || 'N/A';
+            const darkColor = darkRecipe[key] || 'N/A';
+            md += `| \`${key}\` | \`${lightColor}\` | \`${darkColor}\` |\n`;
+        }
+        
+        mdOutputEl.textContent = md;
+    }
+
+
+    /**
+     * === DIE HAUPT-VORSCHAU-FUNKTION ===
+     * Wird aufgerufen, wenn *irgendein* Wert (Picker, Regler, Radio) geändert wird.
+     * Führt alle Berechnungen durch und aktualisiert die gesamte UI-Vorschau.
+     */
+    function updateAllPreviews() {
+      try {
+        // 1. Alle Eingabewerte aus der UI holen
+        const paletteContrast = Number(paletteContrastSlider.value);
+        const paletteBrightness = Number(paletteBrightnessSlider.value);
+        const surfaceTint = Number(surfaceTintSlider.value);
+        const targetContrast = document.querySelector('input[name="wcag"]:checked').value;
+
+        // 2. Alle Farb-Paletten (Stufen 0-900) generieren
+        const palettes = generateAllScales(paletteContrast, paletteBrightness);
+        
+        // 3. System-Token-Rezepte berechnen (Aliase, Tinting, WCAG)
+        const { lightRecipe, darkRecipe, wcagWarnings } = getResolvedRecipes(palettes, surfaceTint, targetContrast);
+
+        // 4. "System Tokens"-Tab (Farbfelder) aktualisieren
+        const swatches = document.querySelectorAll('.color-swatch-preview[data-token]');
+        swatches.forEach(el => {
+          const token = el.getAttribute('data-token'); // z.B. "accent/primary/primary.light"
+          if (!token) return;
+          
+          let color = '#FFA500'; // Fallback-Fehlerfarbe
+          if (token.endsWith('.light') && lightRecipe[token.replace('.light', '')]) {
+              color = lightRecipe[token.replace('.light', '')];
+          } else if (token.endsWith('.dark') && darkRecipe[token.replace('.dark', '')]) {
+              color = darkRecipe[token.replace('.dark', '')];
+          }
+          
+          // Spezialbehandlung für transparente Tokens (shadow/overlay)
+          const tokenName = token.replace('.light', '').replace('.dark', '');
+          if (tokenName === 'base/other/shadow' || tokenName === 'base/other/overlay') {
+              try {
+                  // Wendet 20% Alpha für die CSS-Vorschau an
+                  el.style.background = chroma(color).alpha(0.2).css(); 
+              } catch(e) {
+                  el.style.background = color; // Fallback
+              }
+          } else {
+              el.style.background = color; // Normale Farbe
+          }
+          
+          // WCAG-Warnung '!' ein- oder ausblenden
+          const warningEl = el.parentElement.querySelector('.wcag-warning');
+          if (warningEl) {
+              warningEl.classList.toggle('visible', wcagWarnings.includes(token));
+          }
+        });
+
+        // 5. "Palettes"-Tab aktualisieren
+        populatePalettesTab(palettes);
+        
+        // 6. "Tokens Studio JSON"-Tab aktualisieren
+        generateTokensJSON(palettes);
+        
+        // 7. "Guidelines.md"-Tab aktualisieren
+        generateGuidelinesMD(palettes, lightRecipe, darkRecipe);
+
+      } catch (e) {
+        // Fängt Fehler ab, die während der Vorschau-Generierung passieren
+        console.error('Error during updateAllPreviews:', e);
+      }
+    }
+
+    /**
+     * === INITIALISIERUNGS-FUNKTION ===
+     * Wird einmal beim Start des Plugins aufgerufen.
+     * Richtet alle Event-Listener ein.
+     */
+    function init() {
+      // --- Tab-Reiter-Logik ---
+      const tabs = document.querySelectorAll('.tab');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabId = tab.getAttribute('data-tab');
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          tabPanels.forEach(panel => {
+            panel.classList.toggle('active', panel.id === tabId);
+          });
+        });
+      });
+      
+      // --- Picker/Hex-Synchronisierung einrichten ---
+      syncHexAndPicker('primary');
+      syncHexAndPicker('secondary');
+      syncHexAndPicker('tertiary');
+
+      // --- Regler & Radio-Buttons ---
+      // Alle Regler und Radios sollen bei Änderung die Vorschau aktualisieren
+      const inputs = [paletteContrastSlider, paletteBrightnessSlider, surfaceTintSlider, wcagRadioAA, wcagRadioAAA];
+      inputs.forEach(el => el.addEventListener('input', updateAllPreviews));
+      
+      // --- Regler-Label-Aktualisierung ---
+      paletteContrastSlider.addEventListener('input', () => { paletteContrastValueLabel.textContent = paletteContrastSlider.value + '%'; });
+      paletteBrightnessSlider.addEventListener('input', () => { 
+        // Zeigt den Rohwert (0-100) an, passend zum Screenshot
+        paletteBrightnessValueLabel.textContent = paletteBrightnessSlider.value + '%'; 
+      });
+      surfaceTintSlider.addEventListener('input', () => { surfaceTintValueLabel.textContent = surfaceTintSlider.value + '%'; });
+
+      // --- Button-Listener (Obere Leiste) ---
+      // Aktiviert/Deaktiviert den Export-Button, wenn ein Name eingegeben wird
+      themeNameInput.addEventListener('input', () => { 
+          generateButton.disabled = !(themeNameInput.value && themeNameInput.value.trim().length > 0); 
+      });
+
+      // Klick-Listener für den Haupt-Button (Export/Update)
+      generateButton.addEventListener('click', () => {
+          if (generateButton.disabled) return;
+          
+          // 1. Hole alle finalen Werte aus der UI
+          const paletteContrast = Number(paletteContrastSlider.value);
+          const paletteBrightness = Number(paletteBrightnessSlider.value);
+          const surfaceTint = Number(surfaceTintSlider.value);
+          const targetContrast = document.querySelector('input[name="wcag"]:checked').value;
+          
+          // 2. Generiere die finalen Paletten und Rezepte
+          const palettes = generateAllScales(paletteContrast, paletteBrightness);
+          const { lightRecipe, darkRecipe } = getResolvedRecipes(palettes, surfaceTint, targetContrast);
+
+          // 3. Sende die Daten an 'code.js' (das Backend)
+          parent.postMessage({ pluginMessage: { 
+            type: 'generate-theme', // Der Befehl
+            payload: {
+              themeName: themeNameInput.value.trim(),
+              lightRecipe: lightRecipe, // Das berechnete Light-Mode-Rezept
+              darkRecipe: darkRecipe, // Das berechnete Dark-Mode-Rezept
+              collectionIdToUpdate: importSelect.value || null // ID der Sammlung (oder null)
+            }
+          }}, '*'); // '*' ist für Cross-Origin-Kommunikation erforderlich
+          
+          generateButton.disabled = true; // Verhindert Doppelklicks
+      });
+      
+      // --- Button-Listener (Farb-Aktionen) ---
+      switchButton.addEventListener('click', switchColors);
+      randomButton.addEventListener('click', randomizeColors);
+      
+      // --- Button-Listener (Code-Kopie) ---
+      copyJsonButton.addEventListener('click', () => copyToClipboard(jsonOutputEl, copyJsonButton));
+      copyMdButton.addEventListener('click', () => copyToClipboard(mdOutputEl, copyMdButton));
+
+      // --- Import-Dropdown-Logik ---
+      importSelect.addEventListener('change', () => {
+         const buttonSpan = generateButtonText;
+         
+         if (!importSelect.value) {
+            // "Select collection..." wurde gewählt (Zurücksetzen)
+            buttonSpan.textContent = 'Export to Variables';
+            themeNameInput.value = '';
+            generateButton.disabled = true;
+            return;
+         }
+         
+         // Eine Sammlung wurde ausgewählt -> Wechsle in den "Update"-Modus
+         buttonSpan.textContent = 'Update Variables';
+         
+         const selectedOption = importSelect.options[importSelect.selectedIndex];
+         
+         // Sende eine Nachricht an 'code.js', um die Farbdaten dieser Sammlung zu laden
+         parent.postMessage({ pluginMessage: { 
+             type: 'load-theme-data',
+             payload: {
+                 collectionId: selectedOption.value,
+                 themeName: selectedOption.dataset.name // Der Name der Sammlung
+             }
+         }}, '*');
+      });
+
+      // --- Nachrichten-Empfänger (Listener für Nachrichten *von* code.js) ---
+      window.onmessage = (event) => {
+        const msg = event.data.pluginMessage;
+        if (!msg) return; // Ignoriere Nachrichten, die nicht vom Plugin kommen
+
+        switch (msg.type) {
+          // 'code.js' sendet die Liste der verfügbaren Sammlungen
+          case 'collections-list':
+            importSelect.innerHTML = '<option value="">Select collection...</option>'; // Zurücksetzen
+            msg.collections.forEach(col => {
+              const option = document.createElement('option');
+              option.value = col.id;
+              option.textContent = col.name;
+              option.dataset.name = col.name;
+              importSelect.appendChild(option);
+            });
+            break;
+            
+          // 'code.js' sendet die geladenen Key-Colors (Primary, Secondary, Tertiary)
+          case 'theme-data-loaded':
+            setPickerColor('primary', msg.payload.primary);
+            setPickerColor('secondary', msg.payload.secondary);
+            setPickerColor('tertiary', msg.payload.tertiary);
+            
+            // Setze den Theme-Namen in das Textfeld
+            const selectedOption = importSelect.options[importSelect.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                themeNameInput.value = selectedOption.dataset.name;
+                generateButton.disabled = false; // Aktiviere den "Update"-Button
+            }
+            
+            updateAllPreviews(); // Aktualisiere die Vorschau mit den geladenen Farben
+            break;
+            
+          // 'code.js' meldet, dass die Erstellung/Aktualisierung fertig oder fehlgeschlagen ist
+          case 'generation-complete':
+          case 'generation-error':
+            // Aktiviere den Button wieder (falls ein Name im Feld steht)
+            generateButton.disabled = !(themeNameInput.value && themeNameInput.value.trim().length > 0);
+            break;
+        }
+      };
+
+      // --- Initialer Ladevorgang ---
+      
+      // 1. Fordere die Liste der Sammlungen von 'code.js' an
+      parent.postMessage({ pluginMessage: { type: 'get-collections' } }, '*'); 
+      
+      // 2. Führe die Vorschau einmal mit den Standard-Farbwerten aus
+      updateAllPreviews();
+      
+      // 3. Initialisiere die HEX-Felder, damit sie mit den Pickern übereinstimmen
+      setPickerColor('primary', pickers.primary.value);
+      setPickerColor('secondary', pickers.secondary.value);
+      setPickerColor('tertiary', pickers.tertiary.value);
+    }
+
+    // --- Start ---
+    // Ruft die 'init()'-Funktion auf, um das Plugin zu starten
+    init();
+
+  </script>
+</body>
+</html>
