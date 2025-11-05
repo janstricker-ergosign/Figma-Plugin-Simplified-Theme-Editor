@@ -1,4 +1,7 @@
-# **Simplified Theme Generator (Figma Plugin)**
+# **Simplified Theme Editor (Figma Plugin)**
+
+![Plugin Preview](https://github.com/janstricker-ergosign/Figma-Plugin-Simplified-Theme-Editor/blob/main/Preview.jpg?raw=true)
+
 
 ## **1\. Purpose of the Plugin**
 
