@@ -1,20 +1,13 @@
 <!DOCTYPE html>
-<!-- Dies ist das Haupt-HTML-Dokument für die Benutzeroberfläche (UI) des Plugins -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Stellt sicher, dass die Zeichenkodierung korrekt ist -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Wichtig für responsives Verhalten, falls das Fenster skaliert wird -->
   <title>Simplified Theme Generator</title>
-  <!-- Der Titel, der in der Kopfzeile des Plugin-Fensters erscheint -->
-
-  <!-- Google Fonts: Lädt die Schriftart "Inter" für ein sauberes UI-Design -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Start der CSS-Stile -->
   <style>
     /* === Basis-Stile === */
     /* Setzt das Box-Modell auf 'border-box', was das Layouten erleichtert */
@@ -669,32 +662,19 @@
     }
     pre code { white-space: pre; } /* Behält Formatierung (Leerzeichen, Umbrüche) bei */
   </style>
-  <!-- Ende der CSS-Stile -->
-</head>
+  </head>
 <body>
-  <!-- 
-    ===== HTML-Struktur START =====
-    Die UI besteht aus 3 Hauptteilen:
-    1. .top-row: Obere Leiste für Import/Export
-    2. .content-divider: Der Einstellungs-Bereich (Farben, Regler)
-    3. .preview-container: Der untere Bereich mit den Tabs
-  -->
-
-  <!-- 1. Obere Leiste -->
   <div class="top-row">
-    <!-- Dropdown zum Importieren vorhandener Variablen -->
     <div class="input-group">
       <label for="import-existing-select">Import from Variables (optional)</label>
       <select id="import-existing-select" class="select-input">
         <option value="">Select collection...</option>
       </select>
     </div>
-    <!-- Textfeld für den Namen des Themes -->
     <div class="input-group">
       <label for="theme-name">Theme Name</label>
       <input type="text" id="theme-name" class="text-input" placeholder="Name">
     </div>
-    <!-- Haupt-Button zum Exportieren oder Aktualisieren -->
     <button id="generate-button" class="button-primary" disabled>
       <span id="generate-button-text">Export to Variables</span>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -703,27 +683,21 @@
     </button>
   </div>
 
-  <!-- 2. Einstellungs-Bereich (Layout basiert auf dem Screenshot) -->
   <div class="content-divider">
     
-    <!-- SPALTE 1: Color Picker -->
     <div class="left-column">
       <h2>Color Picker</h2>
-      <!-- Das Grid-Layout für die Farbauswahl -->
       <div class="color-input-grid">
-        <!-- Primary Farbe (Picker + Hex-Feld) -->
         <div class="color-swatch-input">
           <input type="color" id="primary-color-picker" class="color-picker" value="#2E86AB">
         </div>
         <input type="text" id="primary-hex-input" class="hex-input" value="#2E86AB">
         
-        <!-- Secondary Farbe (Picker + Hex-Feld) -->
         <div class="color-swatch-input">
           <input type="color" id="secondary-color-picker" class="color-picker" value="#C0F5A1">
         </div>
         <input type="text" id="secondary-hex-input" class="hex-input" value="#C0F5A1">
 
-        <!-- Tertiary Farbe (Picker + Hex-Feld) -->
         <div class="color-swatch-input">
           <input type="color" id="tertiary-color-picker" class="color-picker" value="#EF8611">
         </div>
@@ -731,16 +705,13 @@
       </div>
     </div>
 
-    <!-- SPALTE 2: Action-Buttons -->
     <div class="color-actions-column">
-      <!-- "Switch" Button -->
       <button id="switch-button" class="button-secondary">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M10.0002 2.66663H12.6668M12.6668 2.66663V5.33329M12.6668 2.66663L9.8335 6.16663M3.3335 12.6666L6.00016 9.99996M10.0002 12.6666H12.6668M12.6668 12.6666V9.99996M12.6668 12.6666L3.3335 3.33329" stroke="#303030" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span>Switch</span>
       </button>
-      <!-- "Random" Button -->
       <button id="random-button" class="button-secondary">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C12.5304 2 13.0391 2.21071 13.4142 2.58579C13.7893 2.96086 14 3.46957 14 4V12C14 12.5304 13.7893 13.0391 13.4142 13.4142C13.0391 13.7893 12.5304 14 12 14H4C3.46957 14 2.96086 13.7893 2.58579 13.4142C2.21071 13.0391 2 12.5304 2 12V4C2 3.46957 2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957 2 4 2H12ZM12 3.33333H4C3.82319 3.33333 3.65362 3.40357 3.5286 3.5286C3.40357 3.65362 3.33333 3.82319 3.33333 4V12C3.33333 12.1768 3.40357 12.3464 3.5286 12.4714C3.65362 12.5964 3.82319 12.6667 4 12.6667H12C12.1768 12.6667 12.3464 12.5964 12.4714 12.4714C12.5964 12.3464 12.6667 12.1768 12.6667 12V4C12.6667 3.82319 12.5964 3.65362 12.4714 3.5286C12.3464 3.40357 12.1768 3.33333 12 3.33333ZM5.66667 9.33333C5.91526 9.33335 6.15493 9.42595 6.33895 9.59308C6.52296 9.76021 6.63814 9.98989 6.662 10.2373L6.66667 10.34C6.66654 10.5968 6.56762 10.8437 6.39039 11.0296C6.21317 11.2155 5.97124 11.326 5.71472 11.3383C5.45821 11.3507 5.20678 11.2639 5.01253 11.0959C4.81829 10.9279 4.69611 10.6916 4.67133 10.436L4.66667 10.3333C4.66667 10.0681 4.77202 9.81376 4.95956 9.62623C5.1471 9.43869 5.40145 9.33333 5.66667 9.33333ZM10.3333 9.33333C10.5819 9.33335 10.8216 9.42595 11.0056 9.59308C11.1896 9.76021 11.3048 9.98989 11.3287 10.2373L11.3333 10.34C11.3332 10.5968 11.2343 10.8437 11.0571 11.0296C10.8798 11.2155 10.6379 11.326 10.3814 11.3383C10.1249 11.3507 9.87345 11.2639 9.6792 11.0959C9.48495 10.9279 9.36278 10.6916 9.338 10.436L9.33333 10.3333C9.33333 10.0681 9.43869 9.81376 9.62623 9.62623C9.81376 9.43869 10.0681 9.33333 10.3333 9.33333ZM8 7C8.24859 7.00001 8.48826 7.09261 8.67228 7.25975C8.8563 7.42688 8.97147 7.65656 8.99533 7.904L9 8.00667C8.99987 8.26348 8.90095 8.5104 8.72373 8.69626C8.54651 8.88212 8.30457 8.99268 8.04806 9.00502C7.79154 9.01736 7.54011 8.93054 7.34587 8.76255C7.15162 8.59456 7.02945 8.35828 7.00467 8.10267L7 8C7 7.73478 7.10536 7.48043 7.29289 7.29289C7.48043 7.10536 7.73478 7 8 7ZM5.66667 4.66667C5.91526 4.66668 6.15493 4.75928 6.33895 4.92641C6.52296 5.09355 6.63814 5.32323 6.662 5.57067L6.66667 5.67333C6.66654 5.93014 6.56762 6.17706 6.39039 6.36292C6.21317 6.54879 5.97124 6.65934 5.71472 6.67168C5.45821 6.68402 5.20678 6.59721 5.01253 6.42922C4.81829 6.26123 4.69611 6.02495 4.67133 5.76933L4.66667 5.66667C4.66667 5.40145 4.77202 5.1471 4.95956 4.95956C5.1471 4.77202 5.40145 4.66667 5.66667 4.66667ZM10.3333 4.66667C10.5819 4.66668 10.8216 4.75928 11.0056 4.92641C11.1896 5.09355 11.3048 5.32323 11.3287 5.57067L11.3333 5.67333C11.3332 5.93014 11.2343 6.17706 11.0571 6.36292C10.8798 6.54879 10.6379 6.65934 10.3814 6.67168C10.1249 6.68402 9.87345 6.59721 9.6792 6.42922C9.48495 6.26123 9.36278 6.02495 9.338 5.76933L9.33333 5.66667C9.33333 5.40145 9.43869 5.1471 9.62623 4.95956C9.81376 4.77202 10.0681 4.66667 10.3333 4.66667Z" fill="#303030"/>
@@ -749,14 +720,11 @@
       </button>
     </div>
 
-    <!-- Vertikale Trennlinie -->
     <div class="vertical-divider"></div>
 
-    <!-- SPALTE 3: Adjustments (Schieberegler) -->
     <div class="adjustments-column">
       <h2>Adjustments</h2>
       <div class="sliders-column">
-        <!-- Regler 1: Palette Contrast -->
         <div class="slider-group">
           <div class="slider-label">
             <label for="palette-contrast-slider">Palette Contrast</label>
@@ -764,15 +732,12 @@
           </div>
           <input type="range" id="palette-contrast-slider" class="slider" min="0" max="100" value="50" step="1">
         </div>
-        <!-- Regler 2: Palette Brightness -->
         <div class="slider-group">
           <div class="slider-label">
             <label for="palette-brightness-slider">Palette Brightness</label>
-            <span id="palette-brightness-value">50%</span> <!-- Label, das per JS aktualisiert wird -->
-          </div>
+            <span id="palette-brightness-value">50%</span> </div>
           <input type="range" id="palette-brightness-slider" class="slider" min="0" max="100" value="50" step="1">
         </div>
-        <!-- Regler 3: Surface Tint -->
         <div class="slider-group">
           <div class="slider-label">
             <label for="surface-tint-slider">Surface Tint</label>
@@ -783,19 +748,15 @@
       </div>
     </div>
     
-    <!-- Vertikale Trennlinie -->
     <div class="vertical-divider"></div>
     
-    <!-- SPALTE 4: WCAG -->
     <div class="wcag-column">
         <h2 style="margin-bottom: -4px;">WCAG Contrast</h2>
         <div class="wcag-contrast-group" style="margin-top: 8px;">
           <label class="wcag-label" style="display: none;">WCAG Contrast</label>
-          <!-- Radio-Buttons für AA vs AAA -->
           <div class="radio-group">
             <label class="radio-label">
-              <input type="radio" id="wcag-aa" name="wcag" value="4.5" checked> <!-- checked = Standardauswahl -->
-              AA (4.5 : 1)
+              <input type="radio" id="wcag-aa" name="wcag" value="4.5" checked> AA (4.5 : 1)
             </label>
             <label class="radio-label">
               <input type="radio" id="wcag-aaa" name="wcag" value="7.0">
@@ -806,9 +767,7 @@
     </div>
   </div>
   
-  <!-- 3. Unterer Vorschau-Bereich -->
   <div class="preview-container">
-    <!-- Tab-Reiter -->
     <div class="tabs-header">
       <div class="tab active" data-tab="system-tokens"><span>System Tokens</span></div>
       <div class="tab" data-tab="palettes"><span>Palettes</span></div>
@@ -816,37 +775,30 @@
       <div class="tab" data-tab="guidelines"><span>Guidelines.md</span></div>
     </div>
 
-    <!-- Tab-Inhalte -->
     <div class="tab-content">
       
-      <!-- Panel 1: System Tokens (die Haupt-Vorschau) -->
       <div id="system-tokens" class="tab-panel active">
         <div class="preview-grid">
           
-          <!-- Sektion: Primary -->
           <div class="preview-section" data-token-group="primary">
             <div class="heading-3"><h3>Primary</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
             <div class="color-grid">
-              <!-- Zeile: primary -->
               <div class="color-row">
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary.light"></div></div>
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary.dark"></div></div>
                 <div class="color-name">primary</div>
               </div>
-              <!-- Zeile: on-primary -->
               <div class="color-row">
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary.light"></div> <div class="wcag-warning">!</div></div>
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary.dark"></div> <div class="wcag-warning">!</div></div>
                 <div class="color-name">on-primary</div>
               </div>
-              <!-- Zeile: primary-container -->
               <div class="color-row">
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary-container.light"></div></div>
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/primary-container.dark"></div></div>
                 <div class="color-name">primary-container</div>
               </div>
-              <!-- Zeile: on-primary-container -->
               <div class="color-row">
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary-container.light"></div> <div class="wcag-warning">!</div></div>
                 <div class="color-swatch-wrapper"><div class="color-swatch-preview" data-token="accent/primary/on-primary-container.dark"></div> <div class="wcag-warning">!</div></div>
@@ -855,7 +807,6 @@
             </div>
           </div>
 
-          <!-- Sektion: Secondary (Struktur wie Primary) -->
           <div class="preview-section" data-token-group="secondary">
             <div class="heading-3"><h3>Secondary</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
@@ -883,7 +834,6 @@
             </div>
           </div>
 
-          <!-- Sektion: Tertiary (Struktur wie Primary) -->
           <div class="preview-section" data-token-group="tertiary">
             <div class="heading-3"><h3>Tertiary</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
@@ -911,7 +861,6 @@
             </div>
           </div>
 
-          <!-- Sektion: Surface (Hintergründe) -->
           <div class="preview-section" data-token-group="surface">
             <div class="heading-3"><h3>Surface</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
@@ -944,7 +893,6 @@
             </div>
           </div>
 
-          <!-- Sektion: Other (Ränder, Schatten) -->
           <div class="preview-section" data-token-group="other">
             <div class="heading-3"><h3>Other</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
@@ -972,7 +920,6 @@
             </div>
           </div>
 
-          <!-- Sektion: Error (Struktur wie Primary) -->
           <div class="preview-section" data-token-group="error">
             <div class="heading-3"><h3>Error</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
@@ -1000,7 +947,6 @@
             </div>
           </div>
 
-          <!-- Sektion: Success (Struktur wie Primary) -->
           <div class="preview-section" data-token-group="success">
             <div class="heading-3"><h3>Success</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
@@ -1028,7 +974,6 @@
             </div>
           </div>
 
-          <!-- Sektion: Info (Struktur wie Primary) -->
           <div class="preview-section" data-token-group="info">
             <div class="heading-3"><h3>Info</h3></div>
             <div class="label-row"><div class="color-label">Light</div><div class="color-label">Dark</div></div>
@@ -1059,14 +1004,11 @@
         </div>
       </div>
 
-      <!-- Panel 2: Palettes (wird dynamisch mit JS gefüllt) -->
       <div id="palettes" class="tab-panel">
         <div class="palette-grid">
-          <!-- Palette content will be generated dynamically -->
-        </div>
+          </div>
       </div>
 
-      <!-- Panel 3: Tokens Studio JSON (Code-Ausgabe) -->
       <div id="tokens-json" class="tab-panel">
         <div class="code-container">
           <button id="copy-json" class="copy-button">Copy</button>
@@ -1074,7 +1016,6 @@
         </div>
       </div>
 
-      <!-- Panel 4: Guidelines.md (Code-Ausgabe) -->
       <div id="guidelines" class="tab-panel">
         <div class="code-container">
           <button id="copy-md" class="copy-button">Copy</button>
@@ -1085,9 +1026,6 @@
   </div>
 
 
-  <!-- ===== JavaScript START ===== -->
-
-  <!-- Lädt die 'chroma.js' Bibliothek, die für alle Farbberechnungen (Mischen, Kontrast, etc.) benötigt wird -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
 
   <script>
@@ -1155,6 +1093,43 @@
     const WCAG_FAIL_MINIMUM = 4.5; // Zeigt Warnung, wenn selbst AA nicht erreicht wird
 
     // --- Token-Definitionen (Rezepte) ---
+    
+    // Dies ist die "Datenbank" für alle Token-Beschreibungen.
+    const variableDescriptions = {
+      'accent/primary/primary': "Die primäre Markenfarbe, verwendet für interaktive Hauptelemente (z.B. Buttons, aktive Status).",
+      'accent/primary/on-primary': "Text und Symbole, die auf der 'primary'-Farbe platziert werden.",
+      'accent/primary/primary-container': "Eine abgetönte Container-Farbe, die sich von der 'primary'-Farbe ableitet (z.B. für Banner, hervorgehobene Bereiche).",
+      'accent/primary/on-primary-container': "Text und Symbole, die auf der 'primary-container'-Farbe platziert werden.",
+      'accent/secondary/secondary': "Eine Akzentfarbe für weniger prominente Komponenten, die dennoch Aufmerksamkeit erfordern (z.B. Filter-Chips, sekundäre Buttons).",
+      'accent/secondary/on-secondary': "Text und Symbole, die auf der 'secondary'-Farbe platziert werden.",
+      'accent/secondary/secondary-container': "Eine abgetönte Container-Farbe, die sich von der 'secondary'-Farbe ableitet.",
+      'accent/secondary/on-secondary-container': "Text und Symbole, die auf der 'secondary-container'-Farbe platziert werden.",
+      'accent/tertiary/tertiary': "Eine Tertiärfarbe für Akzente mit geringerer Priorität.",
+      'accent/tertiary/on-tertiary': "Text/Symbole auf 'tertiary'.",
+      'accent/tertiary/tertiary-container': "Ein Container mit 'tertiary'-Tönung.",
+      'accent/tertiary/on-tertiary-container': "Text/Symbole auf 'tertiary-container'.",
+      'base/surface/surface-lowest': "Die unterste Oberflächenebene, typischerweise der Haupt-Hintergrund der Seite.",
+      'base/surface/surface': "Die Standard-Oberflächenfarbe für Komponenten wie Karten (Cards), Dialoge und Menüs.",
+      'base/surface/surface-variant': "Eine Oberflächenfarbe mit leichter Betonung, oft für Hintergründe von z.B. Eingabefeldern oder als subtile Variante zur 'surface'.",
+      'base/surface/on-surface': "Die primäre Farbe für Text und Symbole auf allen 'surface'-Farben.",
+      'base/surface/on-surface-variant': "Eine gedämpfte Farbe für Text und Symbole, z.B. für sekundären Text, Platzhalter oder deaktivierte Zustände.",
+      'base/other/outline': "Die Standard-Rahmenfarbe für Komponenten, die eine visuelle Abgrenzung benötigen (z.B. Eingabefelder, Buttons im 'outlined'-Stil).",
+      'base/other/outline-variant': "Eine subtile Rahmenfarbe für dekorative Abgrenzungen (z.B. Trennlinien/Dividers).",
+      'base/other/shadow': "Farbe, die für Schlagschatten verwendet wird, um eine Elevationsebene darzustellen.",
+      'base/other/overlay': "Farbe für den Overlay-Hintergrund, der den Rest der UI abdunkelt, wenn ein modales Fenster oder Drawer geöffnet ist.",
+      'feedback/error/error': "Die Farbe zur Signalisierung von Fehlerzuständen.",
+      'feedback/error/on-error': "Text und Symbole, die auf der 'error'-Farbe platziert werden.",
+      'feedback/error/error-container': "Eine abgetönte Container-Farbe für Fehlerhinweise (z.B. Hintergrund eines Fehler-Banners).",
+      'feedback/error/on-error-container': "Text und Symbole, die auf der 'error-container'-Farbe platziert werden.",
+      'feedback/success/success': "Die Farbe zur Signalisierung von Erfolgszuständen.",
+      'feedback/success/on-success': "Text und Symbole, die auf der 'success'-Farbe platziert werden.",
+      'feedback/success/success-container': "Eine abgetönte Container-Farbe für Erfolgshinweise.",
+      'feedback/success/on-success-container': "Text und Symbole, die auf der 'success-container'-Farbe platziert werden.",
+      'feedback/info/info': "Die Farbe zur Signalisierung von informativen Hinweisen.",
+      'feedback/info/on-info': "Text und Symbole, die auf der 'info'-Farbe platziert werden.",
+      'feedback/info/info-container': "Eine abgetönte Container-Farbe für informative Hinweise.",
+      'feedback/info/on-info-container': "Text und Symbole, die auf der 'info-container'-Farbe platziert werden."
+    };
 
     // Definiert, welche "On"-Farbe zu welcher Hintergrundfarbe gehört
     // (z.B. 'on-primary' wird auf 'primary' geprüft)
@@ -1338,59 +1313,112 @@
 
     /**
      * Hilfsfunktion, um einen Wert in einem verschachtelten Objekt zu setzen.
-     * z.B. setNestedObjectValue(obj, 'a/b/c', 10) -> obj = {a: {b: {c: 10}}}
+     * z.B. setNestedObjectValue(obj, 'a.b.c', 10) -> obj = {a: {b: {c: 10}}}
      */
     function setNestedObjectValue(obj, pathStr, value) {
-        const keys = pathStr.split('/'); let current = obj;
-        for (let i = 0; i < keys.length - 1; i++) { const key = keys[i]; current[key] = current[key] || {}; current = current[key]; }
+        const keys = pathStr.split('.'); // Aufteilung nach '.'
+        let current = obj;
+        for (let i = 0; i < keys.length - 1; i++) {
+            const key = keys[i];
+            current[key] = current[key] || {};
+            current = current[key];
+        }
         current[keys[keys.length - 1]] = value;
     }
 
+    // *** START: KORRIGIERTE KOPIERFUNKTION ***
     /**
      * Kopiert den Inhalt eines <pre><code> Blocks in die Zwischenablage.
+     * VERBESSERTE VERSION: Verwendet einen Fallback für 'document.execCommand',
+     * da navigator.clipboard in sandboxed iframes (wie Figma-Plugins)
+     * oft nicht zuverlässig funktioniert.
      */
     function copyToClipboard(element, button) {
         if (!element || !element.textContent) return;
-        navigator.clipboard.writeText(element.textContent).then(() => {
-            const originalText = button.textContent;
-            button.textContent = 'Copied!'; // Visuelles Feedback
-            setTimeout(() => { button.textContent = originalText; }, 1500); // Zurücksetzen
-        }).catch(err => console.error('Failed to copy text: ', err));
+        const textToCopy = element.textContent;
+
+        // 1. Versuche die moderne navigator.clipboard API
+        //    (window.isSecureContext wird in Figma-Plugins als 'true' ausgewertet,
+        //     aber die API schlägt trotzdem manchmal fehl, daher der Fallback)
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Erfolg
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = originalText; }, 1500);
+            }).catch(err => {
+                console.warn('Navigator.clipboard failed, falling back to execCommand.', err);
+                copyUsingExecCommand(textToCopy, button); // Fallback
+            });
+        } else {
+            // 2. Fallback für ältere Browser oder unsichere Kontexte
+            console.warn('Navigator.clipboard not available, falling back to execCommand.');
+            copyUsingExecCommand(textToCopy, button);
+        }
     }
+
+    /**
+     * Hilfsfunktion für den 'copyToClipboard'-Fallback.
+     */
+    function copyUsingExecCommand(textToCopy, button) {
+        try {
+            // 3. Temporäres <textarea> Element erstellen
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            
+            // Verstecke das Element, damit es das Layout nicht stört
+            textArea.style.position = 'absolute';
+            textArea.style.left = '-9999px';
+            textArea.style.top = '0';
+            
+            document.body.appendChild(textArea);
+            textArea.select(); // Text im <textarea> auswählen
+            
+            // 4. Kopierbefehl ausführen
+            const success = document.execCommand('copy');
+            
+            // 5. Feedback geben
+            if (success) {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = originalText; }, 1500);
+            } else {
+                throw new Error('execCommand was unsuccessful');
+            }
+            
+            // 6. Aufräumen
+            document.body.removeChild(textArea);
+
+        } catch (err) {
+            console.error('Failed to copy text using execCommand: ', err);
+            // Fehler-Feedback
+            const originalText = button.textContent;
+            button.textContent = 'Failed!';
+            setTimeout(() => { button.textContent = originalText; }, 1500);
+        }
+    }
+    // *** ENDE: KORRIGIERTE KOPIERFUNKTION ***
     
     // --- Kernlogik: Farb-Generierung ---
 
     /**
      * Erzeugt eine 10-stufige Farbskala (50-900) aus einer Basisfarbe.
-     * @param {string} baseColor - Die Basisfarbe (z.B. primary.500)
-     * @param {number} contrastValue - Wert von 0-100 (aus dem Regler)
-     * @param {number} brightnessValue - Wert von 0-100 (aus dem Regler)
-     * @returns {object} Ein Objekt mit Farbstufen (z.B. { 50: '#...', 100: '#...' })
      */
     function generateBrandScale(baseColor, contrastValue = 50, brightnessValue = 50) {
        try {
         const scale = {};
-        
-        // 1. Helligkeit anpassen (0-100 -> -1 bis +1)
         const brightnessFactor = (brightnessValue - 50) / 50;
-        // Basisfarbe leicht aufhellen oder abdunkeln
         const base = chroma(baseColor).brighten(brightnessFactor * 0.5);
-
-        // 2. Kontrast/Spreizung anpassen (0-100 -> -1 bis +1)
         const contrastFactor = (contrastValue - 50) / 50;
-        const tint_mult = 1 + (contrastFactor * 0.4); // Multiplikator für helle Töne
-        const shade_mult = 1 + (contrastFactor * 0.6); // Multiplikator für dunkle Töne
-        
-        // Hilfsfunktion, um extreme Werte (zu nah an weiß/schwarz) zu vermeiden
+        const tint_mult = 1 + (contrastFactor * 0.4);
+        const shade_mult = 1 + (contrastFactor * 0.6);
         const clampMix = (val) => Math.max(0.01, Math.min(val, 0.99));
-
-        // 3. Skala berechnen (Mischen mit Weiß oder Schwarz)
         scale[400] = base.mix('#ffffff', clampMix(0.2 * tint_mult)).hex();
         scale[300] = base.mix('#ffffff', clampMix(0.4 * tint_mult)).hex();
         scale[200] = base.mix('#ffffff', clampMix(0.6 * tint_mult)).hex();
         scale[100] = base.mix('#ffffff', clampMix(0.8 * tint_mult)).hex();
         scale[50]  = base.mix('#ffffff', clampMix(0.9 * tint_mult)).hex();
-        scale[500] = base.hex(); // Die (angepasste) Basisfarbe
+        scale[500] = base.hex();
         scale[600] = base.mix('#000000', clampMix(0.15 * shade_mult)).hex();
         scale[700] = base.mix('#000000', clampMix(0.35 * shade_mult)).hex();
         scale[800] = base.mix('#000000', clampMix(0.55 * shade_mult)).hex();
@@ -1398,69 +1426,46 @@
         return scale;
       } catch (e) { 
         console.error("Error generating brand scale", e);
-        // Fallback-Skala bei einem Fehler
         return { 50: '#F0F0F0', 100: '#E0E0E0', 200: '#C0C0C0', 300: '#A0A0A0', 400: '#808080', 500: '#606060', 600: '#404040', 700: '#303030', 800: '#202020', 900: '#101010' }; 
       }
     }
     
     /**
      * Erzeugt die Neutral-Skala (Grautöne).
-     * Passt den hellsten und dunkelsten Punkt basierend auf Kontrast und Helligkeit an.
      */
     function generateNeutralScale(darkest = '#1a1a1a', contrastValue = 50, brightnessValue = 50) {
        const scale = {};
        const contrastFactor = (contrastValue - 50) / 50;
        const brightnessFactor = (brightnessValue - 50) / 50;
-       
-       // Passt den hellsten Punkt an
-       const lightest_adj = chroma('#F5F5F5')
-            .darken(contrastFactor * 0.5) // Mehr Kontrast = dunkleres Hell
-            .brighten(brightnessFactor * 0.3); // Mehr Helligkeit = helleres Hell
-       
-       // Passt den dunkelsten Punkt an
-       const darkest_adj = chroma(darkest)
-            .darken(contrastFactor * 0.6) // Mehr Kontrast = dunkleres Dunkel
-            .brighten(brightnessFactor * 0.5); // Mehr Helligkeit = helleres Dunkel
-       
-       // Erzeugt einen Farbverlauf (Ramp) zwischen den angepassten Endpunkten
+       const lightest_adj = chroma('#F5F5F5').darken(contrastFactor * 0.5).brighten(brightnessFactor * 0.3);
+       const darkest_adj = chroma(darkest).darken(contrastFactor * 0.6).brighten(brightnessFactor * 0.5);
        const ramp = chroma.scale([lightest_adj, darkest_adj]).mode('lch').colors(10);
-       
        paletteScaleKeys.forEach((key, index) => scale[key] = ramp[index]);
-       scale[0] = '#ffffff'; // Stufe 0 ist *immer* reines Weiß
+       scale[0] = '#ffffff';
        return scale;
     }
     
     /**
      * Hauptfunktion zur Generierung *aller* Paletten (Primary, Secondary, Neutral, etc.)
-     * basierend auf den aktuellen UI-Einstellungen.
      */
     function generateAllScales(paletteContrastValue, paletteBrightnessValue) {
       const primaryHex = pickers.primary.value;
       const secondaryHex = pickers.secondary.value;
       const tertiaryHex = pickers.tertiary.value;
-      
-      // Berechnet den durchschnittlichen Farbton (Hue) der Key-Colors
       let avgLchHue = 0; let validHues = 0; 
       try { if (chroma.valid(primaryHex)) { avgLchHue += chroma(primaryHex).get('lch.h'); validHues++; } } catch {} 
       try { if (chroma.valid(secondaryHex)) { avgLchHue += chroma(secondaryHex).get('lch.h'); validHues++; } } catch {}
-      
-      if (validHues > 0) { avgLchHue /= validHues; } else { avgLchHue = 180; } // Fallback
-      
-      // Berechnet einen "Temperatur-Faktor" (0 = kühl, 1 = warm)
+      if (validHues > 0) { avgLchHue /= validHues; } else { avgLchHue = 180; }
       let tempFactor = 0.5; 
       const hueRange = HUE_COOLEST - HUE_WARMEST; 
       if (hueRange !== 0) { 
           tempFactor = (HUE_COOLEST - avgLchHue) / hueRange; 
-          tempFactor = Math.max(0, Math.min(1, tempFactor)); // Klemmt Wert zwischen 0 und 1
+          tempFactor = Math.max(0, Math.min(1, tempFactor));
       }
-      
-      // Mischt die Feedback-Farben basierend auf der Temperatur
-      // (z.B. ein warmes Theme bekommt ein wärmeres Rot als ein kühles Theme)
       const errorBaseInterpolated = chroma.mix(feedbackBases.cool.red, feedbackBases.warm.red, tempFactor, 'lch').hex();
       const successBaseInterpolated = chroma.mix(feedbackBases.cool.green, feedbackBases.warm.green, tempFactor, 'lch').hex();
       const infoBaseInterpolated = chroma.mix(feedbackBases.cool.blue, feedbackBases.warm.blue, tempFactor, 'lch').hex();
       
-      // Ruft die Skalen-Generatoren für alle Paletten auf
       return {
         primary: generateBrandScale(primaryHex, paletteContrastValue, paletteBrightnessValue),
         secondary: generateBrandScale(secondaryHex, paletteContrastValue, paletteBrightnessValue),
@@ -1474,34 +1479,24 @@
 
     /**
      * Stellt den WCAG-Kontrast sicher.
-     * Prüft 'preferred' (z.B. Weiß) auf 'background'. Wenn es fehlschlägt,
-     * prüft es 'fallback' (z.B. Schwarz).
-     * @returns {object} { color, contrast, pass }
      */
     function ensureContrast(background, preferred, fallback, targetContrastRatio) {
        try {
         const bgValid = chroma.valid(background) ? background : '#FFFFFF';
         const prefValid = chroma.valid(preferred) ? preferred : '#000000';
         const fallValid = chroma.valid(fallback) ? fallback : '#000000';
-
-        // 1. Prüfe bevorzugte Farbe
         const prefContrast = chroma.contrast(bgValid, prefValid);
         if (prefContrast >= targetContrastRatio) { 
             return { color: prefValid, contrast: prefContrast, pass: true }; 
         }
-        
-        // 2. Bevorzugte Farbe fehlgeschlagen, prüfe Fallback-Farbe
         const fallbackContrast = chroma.contrast(bgValid, fallValid);
         if (fallbackContrast >= targetContrastRatio) {
             return { color: fallValid, contrast: fallbackContrast, pass: true };
         }
-
-        // 3. Beide fehlgeschlagen. Nimm die mit dem *besseren* Kontrast.
         if (fallbackContrast > prefContrast) {
              return { color: fallValid, contrast: fallbackContrast, pass: false };
         }
         return { color: prefValid, contrast: prefContrast, pass: false };
-
       } catch (e) { 
         console.error("Error in ensureContrast:", e); 
         return { color: fallback, contrast: 0, pass: false }; 
@@ -1510,37 +1505,28 @@
 
     /**
      * Wendet die Rezepte (Alias Maps) auf die generierten Paletten an.
-     * Führt 3 Schritte aus:
-     * 1. Aliase auflösen (z.B. '{palettes.primary.500}' -> '#2E86AB')
-     * 2. Surface Tinting anwenden (Farben mit der Primary-Farbe mischen)
-     * 3. WCAG-Kontrast für "On"-Farben sicherstellen
-     * @returns {object} { lightRecipe, darkRecipe, wcagWarnings }
      */
     function getResolvedRecipes(palettes, surfaceTintValue, targetContrastRatio) {
         const lightRecipe = {};
         const darkRecipe = {};
-        const wcagWarnings = []; // Liste der Tokens, die den Kontrast-Test nicht bestehen
-
+        const wcagWarnings = [];
         const primaryTintBase = palettes.primary['500'] || '#6750A4';
-        const tintFactor = surfaceTintValue / 100; // 0 bis 1
+        const tintFactor = surfaceTintValue / 100;
 
-        // Hilfsfunktion, um Alias-Strings (z.B. '{palettes.primary.500}')
-        // in echte HEX-Werte aus dem 'palettes'-Objekt umzuwandeln.
         const resolveAlias = (alias) => {
             if (typeof alias !== 'string') { 
                 console.warn("resolveAlias received non-string:", alias);
-                return '#FF00FF'; // Fehlerfarbe
+                return '#FF00FF';
             }
-            const placeholder = alias.replace(/[{}]/g, ''); // "palettes.primary.500"
-            const parts = placeholder.split('.'); // ['palettes', 'primary', '500']
+            const placeholder = alias.replace(/[{}]/g, '');
+            const parts = placeholder.split('.');
             if (parts.length === 3 && palettes[parts[1]] && palettes[parts[1]][parts[2]]) {
-                return palettes[parts[1]][parts[2]]; // Holt den HEX-Wert
+                return palettes[parts[1]][parts[2]];
             }
             console.warn("Could not resolve alias:", alias);
-            return '#FF00FF'; // Fehlerfarbe
+            return '#FF00FF';
         };
 
-        // 1. Aliase auflösen
         for (const key in lightRecipeAliasMap) {
             lightRecipe[key] = resolveAlias(lightRecipeAliasMap[key]);
         }
@@ -1548,13 +1534,10 @@
             darkRecipe[key] = resolveAlias(darkRecipeAliasMap[key]);
         }
 
-        // 2. Surface Tinting anwenden
         if (tintFactor > 0) {
             for (const key of tintableTokens) {
-                // Unterschiedliche Stärken für 'surface' vs. andere Tokens
                 let lightTintMultiplier = (key === 'base/surface/surface') ? 0.04 : 0.1;
                 let darkTintMultiplier = (key === 'base/surface/surface') ? 0.06 : 0.15;
-
                 if (lightRecipe[key]) {
                     lightRecipe[key] = chroma.mix(lightRecipe[key], primaryTintBase, tintFactor * lightTintMultiplier, 'lch').hex();
                 }
@@ -1564,68 +1547,54 @@
             }
         }
         
-        // 3. WCAG-Kontrast sicherstellen
         for (const onKey in onTokenBackgroundMap) {
-            const bgKey = onTokenBackgroundMap[onKey]; // Finde den zugehörigen Hintergrund
-            
-            // --- Light Mode Check ---
+            const bgKey = onTokenBackgroundMap[onKey];
             const onPrefLight = resolveAlias(lightRecipeAliasMap[onKey]);
-            const onFallLight = onPrefLight === palettes.neutral[0] ? palettes.neutral[900] : palettes.neutral[0]; // (Weiß -> Schwarz, Schwarz -> Weiß)
-            const bgLight = lightRecipe[bgKey]; // Nimm den bereits getönten Hintergrund
-            
+            const onFallLight = onPrefLight === palettes.neutral[0] ? palettes.neutral[900] : palettes.neutral[0];
+            const bgLight = lightRecipe[bgKey];
             const lightResult = ensureContrast(bgLight, onPrefLight, onFallLight, targetContrastRatio);
             lightRecipe[onKey] = lightResult.color;
             if (chroma.contrast(lightRecipe[onKey], bgLight) < WCAG_FAIL_MINIMUM) {
-                wcagWarnings.push(onKey + '.light'); // Für die '!' Warnung
+                wcagWarnings.push(onKey + '.light');
             }
             
-            // --- Dark Mode Check ---
             const onPrefDark = resolveAlias(darkRecipeAliasMap[onKey]);
             const onFallDark = onPrefDark === palettes.neutral[0] ? palettes.neutral[900] : palettes.neutral[0];
             const bgDark = darkRecipe[bgKey];
-            
             const darkResult = ensureContrast(bgDark, onPrefDark, onFallDark, targetContrastRatio);
             darkRecipe[onKey] = darkResult.color;
             if (chroma.contrast(darkRecipe[onKey], bgDark) < WCAG_FAIL_MINIMUM) {
                  wcagWarnings.push(onKey + '.dark');
             }
         }
-
         return { lightRecipe, darkRecipe, wcagWarnings };
     }
 
     // --- UI Update-Funktionen ---
-    // Diese Funktionen aktualisieren die Vorschau-Tabs (Palettes, JSON, MD)
 
     /**
      * Füllt den "Palettes"-Tab dynamisch mit den Farbskalen.
      */
     function populatePalettesTab(palettes) {
         if (!paletteContainer) return;
-        paletteContainer.innerHTML = ''; // Leert den Inhalt
-        
+        paletteContainer.innerHTML = '';
         for (const name in palettes) {
             const scale = palettes[name];
             const row = document.createElement('div');
             row.className = 'palette-row';
-            
             const nameEl = document.createElement('div');
             nameEl.className = 'palette-name';
             nameEl.textContent = name;
             row.appendChild(nameEl);
-            
             const scaleEl = document.createElement('div');
             scaleEl.className = 'palette-scale';
-            
             const keysToUse = (name === 'neutral') ? scaleKeys : paletteScaleKeys;
-            
             for (const key of keysToUse) {
                 const color = scale[key];
                 const swatch = document.createElement('div');
                 swatch.className = 'palette-swatch';
                 swatch.style.backgroundColor = color;
                 swatch.textContent = key;
-                // Prüft, ob der Text hell sein muss (für dunkle Hintergründe)
                 if (chroma.contrast(color, '#000000') < 4.5) {
                     swatch.classList.add('light-text');
                 }
@@ -1642,29 +1611,66 @@
     function generateTokensJSON(palettes) {
         if (!jsonOutputEl) return;
         
+        const themeName = (themeNameInput.value || 'whitelabel').trim().toLowerCase().replace(/\s+/g, '-');
+        const themeIdLight = `${themeName}-light`;
+        const themeIdDark = `${themeName}-dark`;
+
         const output = {
-            palettes: {},
-            light: {},
-            dark: {}
+            palettes: { palettes: {} },
+            light: { light: {} },
+            dark: { dark: {} },
+            "$themes": [
+                {
+                    "id": themeIdLight, "name": "light", "group": themeName,
+                    "selectedTokenSets": { "palettes": "source", "light": "enabled" },
+                    "$figmaStyleReferences": {}, "$figmaVariableReferences": {}
+                },
+                {
+                    "id": themeIdDark, "name": "dark", "group": themeName,
+                    "selectedTokenSets": { "palettes": "source", "dark": "enabled" },
+                    "$figmaStyleReferences": {}, "$figmaVariableReferences": {}
+                }
+            ],
+            "$metadata": { "tokenSetOrder": [ "palettes", "light", "dark" ] }
         };
         
-        output.palettes = palettes; // Fügt die Roh-Paletten hinzu
+        // 1. Paletten füllen
+        for (const paletteName in palettes) {
+            if (!output.palettes.palettes[paletteName]) {
+                output.palettes.palettes[paletteName] = {};
+            }
+            const scale = palettes[paletteName];
+            for (const key in scale) {
+                 output.palettes.palettes[paletteName][key] = {
+                    "$value": scale[key],
+                    "$type": "color"
+                 };
+            }
+        }
         
-        // Fügt die Light-Mode-Rezepte (Aliase) hinzu
+        // 2. Light Theme füllen (Semantische Tokens)
         for (const key in lightRecipeAliasMap) {
             const alias = lightRecipeAliasMap[key];
-            const tsPath = key.replace(/\//g, '.'); // Wandelt "a/b/c" in "a.b.c" um
-            setNestedObjectValue(output.light, tsPath, alias);
+            const tsPath = 'light.' + key.replace(/\//g, '.');
+            const tokenObject = { "$value": alias, "$type": "color" };
+            if (variableDescriptions[key]) {
+                tokenObject["$description"] = variableDescriptions[key];
+            }
+            setNestedObjectValue(output.light, tsPath, tokenObject);
         }
         
-        // Fügt die Dark-Mode-Rezepte (Aliase) hinzu
+        // 3. Dark Theme füllen (Semantische Tokens)
         for (const key in darkRecipeAliasMap) {
             const alias = darkRecipeAliasMap[key];
-            const tsPath = key.replace(/\//g, '.');
-            setNestedObjectValue(output.dark, tsPath, alias);
+            const tsPath = 'dark.' + key.replace(/\//g, '.');
+            const tokenObject = { "$value": alias, "$type": "color" };
+            if (variableDescriptions[key]) {
+                tokenObject["$description"] = variableDescriptions[key];
+            }
+            setNestedObjectValue(output.dark, tsPath, tokenObject);
         }
         
-        jsonOutputEl.textContent = JSON.stringify(output, null, 2); // Formatiert als JSON
+        jsonOutputEl.textContent = JSON.stringify(output, null, 2);
     }
     
     /**
@@ -1674,8 +1680,6 @@
         if (!mdOutputEl) return;
         let md = `# ${themeNameInput.value || 'My Theme'} Guidelines\n\n`;
         md += "## Color Palettes\n\n";
-
-        // Paletten-Tabelle
         for (const name in palettes) {
             md += `### ${name.charAt(0).toUpperCase() + name.slice(1)} Palette\n\n`;
             md += "| Name | Hex | Swatch |\n";
@@ -1683,104 +1687,76 @@
             const keysToUse = (name === 'neutral') ? scaleKeys : paletteScaleKeys;
             for (const key of keysToUse) {
                 const color = palettes[name][key];
-                // Verwendet einen Platzhalter-Bild-Service, um Farbfelder in MD anzuzeigen
                 md += `| ${name}-${key} | \`${color}\` | <img src="https://placehold.co/24x24/${color.substring(1)}/${color.substring(1)}" alt="${color}" width="24" height="24"> |\n`;
             }
             md += "\n";
         }
-        
-        // System-Token-Tabelle
         md += "## System Tokens\n\n";
         md += "| Token Name | Light Mode | Dark Mode |\n";
         md += "| :--- | :--- | :--- |\n";
-        
         const allKeys = new Set([...Object.keys(lightRecipe), ...Object.keys(darkRecipe)]);
         const sortedKeys = Array.from(allKeys).sort();
-        
         for (const key of sortedKeys) {
             const lightColor = lightRecipe[key] || 'N/A';
             const darkColor = darkRecipe[key] || 'N/A';
             md += `| \`${key}\` | \`${lightColor}\` | \`${darkColor}\` |\n`;
         }
-        
         mdOutputEl.textContent = md;
     }
 
 
     /**
      * === DIE HAUPT-VORSCHAU-FUNKTION ===
-     * Wird aufgerufen, wenn *irgendein* Wert (Picker, Regler, Radio) geändert wird.
-     * Führt alle Berechnungen durch und aktualisiert die gesamte UI-Vorschau.
      */
     function updateAllPreviews() {
       try {
-        // 1. Alle Eingabewerte aus der UI holen
         const paletteContrast = Number(paletteContrastSlider.value);
         const paletteBrightness = Number(paletteBrightnessSlider.value);
         const surfaceTint = Number(surfaceTintSlider.value);
         const targetContrast = document.querySelector('input[name="wcag"]:checked').value;
 
-        // 2. Alle Farb-Paletten (Stufen 0-900) generieren
         const palettes = generateAllScales(paletteContrast, paletteBrightness);
-        
-        // 3. System-Token-Rezepte berechnen (Aliase, Tinting, WCAG)
         const { lightRecipe, darkRecipe, wcagWarnings } = getResolvedRecipes(palettes, surfaceTint, targetContrast);
 
-        // 4. "System Tokens"-Tab (Farbfelder) aktualisieren
         const swatches = document.querySelectorAll('.color-swatch-preview[data-token]');
         swatches.forEach(el => {
-          const token = el.getAttribute('data-token'); // z.B. "accent/primary/primary.light"
+          const token = el.getAttribute('data-token');
           if (!token) return;
-          
-          let color = '#FFA500'; // Fallback-Fehlerfarbe
+          let color = '#FFA500';
           if (token.endsWith('.light') && lightRecipe[token.replace('.light', '')]) {
               color = lightRecipe[token.replace('.light', '')];
           } else if (token.endsWith('.dark') && darkRecipe[token.replace('.dark', '')]) {
               color = darkRecipe[token.replace('.dark', '')];
           }
-          
-          // Spezialbehandlung für transparente Tokens (shadow/overlay)
           const tokenName = token.replace('.light', '').replace('.dark', '');
           if (tokenName === 'base/other/shadow' || tokenName === 'base/other/overlay') {
               try {
-                  // Wendet 20% Alpha für die CSS-Vorschau an
                   el.style.background = chroma(color).alpha(0.2).css(); 
               } catch(e) {
-                  el.style.background = color; // Fallback
+                  el.style.background = color;
               }
           } else {
-              el.style.background = color; // Normale Farbe
+              el.style.background = color;
           }
-          
-          // WCAG-Warnung '!' ein- oder ausblenden
           const warningEl = el.parentElement.querySelector('.wcag-warning');
           if (warningEl) {
               warningEl.classList.toggle('visible', wcagWarnings.includes(token));
           }
         });
 
-        // 5. "Palettes"-Tab aktualisieren
         populatePalettesTab(palettes);
-        
-        // 6. "Tokens Studio JSON"-Tab aktualisieren
         generateTokensJSON(palettes);
-        
-        // 7. "Guidelines.md"-Tab aktualisieren
         generateGuidelinesMD(palettes, lightRecipe, darkRecipe);
 
       } catch (e) {
-        // Fängt Fehler ab, die während der Vorschau-Generierung passieren
         console.error('Error during updateAllPreviews:', e);
       }
     }
 
     /**
      * === INITIALISIERUNGS-FUNKTION ===
-     * Wird einmal beim Start des Plugins aufgerufen.
-     * Richtet alle Event-Listener ein.
      */
     function init() {
-      // --- Tab-Reiter-Logik ---
       const tabs = document.querySelectorAll('.tab');
       const tabPanels = document.querySelectorAll('.tab-panel');
       tabs.forEach(tab => {
@@ -1794,102 +1770,79 @@
         });
       });
       
-      // --- Picker/Hex-Synchronisierung einrichten ---
       syncHexAndPicker('primary');
       syncHexAndPicker('secondary');
       syncHexAndPicker('tertiary');
 
-      // --- Regler & Radio-Buttons ---
-      // Alle Regler und Radios sollen bei Änderung die Vorschau aktualisieren
       const inputs = [paletteContrastSlider, paletteBrightnessSlider, surfaceTintSlider, wcagRadioAA, wcagRadioAAA];
       inputs.forEach(el => el.addEventListener('input', updateAllPreviews));
       
-      // --- Regler-Label-Aktualisierung ---
       paletteContrastSlider.addEventListener('input', () => { paletteContrastValueLabel.textContent = paletteContrastSlider.value + '%'; });
       paletteBrightnessSlider.addEventListener('input', () => { 
-        // Zeigt den Rohwert (0-100) an, passend zum Screenshot
         paletteBrightnessValueLabel.textContent = paletteBrightnessSlider.value + '%'; 
       });
       surfaceTintSlider.addEventListener('input', () => { surfaceTintValueLabel.textContent = surfaceTintSlider.value + '%'; });
 
-      // --- Button-Listener (Obere Leiste) ---
-      // Aktiviert/Deaktiviert den Export-Button, wenn ein Name eingegeben wird
       themeNameInput.addEventListener('input', () => { 
           generateButton.disabled = !(themeNameInput.value && themeNameInput.value.trim().length > 0); 
       });
 
-      // Klick-Listener für den Haupt-Button (Export/Update)
       generateButton.addEventListener('click', () => {
           if (generateButton.disabled) return;
           
-          // 1. Hole alle finalen Werte aus der UI
           const paletteContrast = Number(paletteContrastSlider.value);
           const paletteBrightness = Number(paletteBrightnessSlider.value);
           const surfaceTint = Number(surfaceTintSlider.value);
           const targetContrast = document.querySelector('input[name="wcag"]:checked').value;
           
-          // 2. Generiere die finalen Paletten und Rezepte
           const palettes = generateAllScales(paletteContrast, paletteBrightness);
           const { lightRecipe, darkRecipe } = getResolvedRecipes(palettes, surfaceTint, targetContrast);
 
-          // 3. Sende die Daten an 'code.js' (das Backend)
           parent.postMessage({ pluginMessage: { 
-            type: 'generate-theme', // Der Befehl
+            type: 'generate-theme',
             payload: {
               themeName: themeNameInput.value.trim(),
-              lightRecipe: lightRecipe, // Das berechnete Light-Mode-Rezept
-              darkRecipe: darkRecipe, // Das berechnete Dark-Mode-Rezept
-              collectionIdToUpdate: importSelect.value || null // ID der Sammlung (oder null)
+              lightRecipe: lightRecipe,
+              darkRecipe: darkRecipe,
+              collectionIdToUpdate: importSelect.value || null
             }
-          }}, '*'); // '*' ist für Cross-Origin-Kommunikation erforderlich
+          }}, '*');
           
-          generateButton.disabled = true; // Verhindert Doppelklicks
+          generateButton.disabled = true;
       });
       
-      // --- Button-Listener (Farb-Aktionen) ---
       switchButton.addEventListener('click', switchColors);
       randomButton.addEventListener('click', randomizeColors);
       
-      // --- Button-Listener (Code-Kopie) ---
+      // Event-Listener sind korrekt und verweisen auf die neue copyToClipboard-Funktion
       copyJsonButton.addEventListener('click', () => copyToClipboard(jsonOutputEl, copyJsonButton));
       copyMdButton.addEventListener('click', () => copyToClipboard(mdOutputEl, copyMdButton));
 
-      // --- Import-Dropdown-Logik ---
       importSelect.addEventListener('change', () => {
          const buttonSpan = generateButtonText;
-         
          if (!importSelect.value) {
-            // "Select collection..." wurde gewählt (Zurücksetzen)
             buttonSpan.textContent = 'Export to Variables';
             themeNameInput.value = '';
             generateButton.disabled = true;
             return;
          }
-         
-         // Eine Sammlung wurde ausgewählt -> Wechsle in den "Update"-Modus
          buttonSpan.textContent = 'Update Variables';
-         
          const selectedOption = importSelect.options[importSelect.selectedIndex];
-         
-         // Sende eine Nachricht an 'code.js', um die Farbdaten dieser Sammlung zu laden
          parent.postMessage({ pluginMessage: { 
              type: 'load-theme-data',
              payload: {
                  collectionId: selectedOption.value,
-                 themeName: selectedOption.dataset.name // Der Name der Sammlung
+                 themeName: selectedOption.dataset.name
              }
          }}, '*');
       });
 
-      // --- Nachrichten-Empfänger (Listener für Nachrichten *von* code.js) ---
       window.onmessage = (event) => {
         const msg = event.data.pluginMessage;
-        if (!msg) return; // Ignoriere Nachrichten, die nicht vom Plugin kommen
-
+        if (!msg) return;
         switch (msg.type) {
-          // 'code.js' sendet die Liste der verfügbaren Sammlungen
           case 'collections-list':
-            importSelect.innerHTML = '<option value="">Select collection...</option>'; // Zurücksetzen
+            importSelect.innerHTML = '<option value="">Select collection...</option>';
             msg.collections.forEach(col => {
               const option = document.createElement('option');
               option.value = col.id;
@@ -1898,48 +1851,32 @@
               importSelect.appendChild(option);
             });
             break;
-            
-          // 'code.js' sendet die geladenen Key-Colors (Primary, Secondary, Tertiary)
           case 'theme-data-loaded':
             setPickerColor('primary', msg.payload.primary);
             setPickerColor('secondary', msg.payload.secondary);
             setPickerColor('tertiary', msg.payload.tertiary);
-            
-            // Setze den Theme-Namen in das Textfeld
             const selectedOption = importSelect.options[importSelect.selectedIndex];
             if (selectedOption && selectedOption.value) {
                 themeNameInput.value = selectedOption.dataset.name;
-                generateButton.disabled = false; // Aktiviere den "Update"-Button
+                generateButton.disabled = false;
             }
-            
-            updateAllPreviews(); // Aktualisiere die Vorschau mit den geladenen Farben
+            updateAllPreviews();
             break;
-            
-          // 'code.js' meldet, dass die Erstellung/Aktualisierung fertig oder fehlgeschlagen ist
           case 'generation-complete':
           case 'generation-error':
-            // Aktiviere den Button wieder (falls ein Name im Feld steht)
             generateButton.disabled = !(themeNameInput.value && themeNameInput.value.trim().length > 0);
             break;
         }
       };
 
-      // --- Initialer Ladevorgang ---
-      
-      // 1. Fordere die Liste der Sammlungen von 'code.js' an
       parent.postMessage({ pluginMessage: { type: 'get-collections' } }, '*'); 
-      
-      // 2. Führe die Vorschau einmal mit den Standard-Farbwerten aus
       updateAllPreviews();
-      
-      // 3. Initialisiere die HEX-Felder, damit sie mit den Pickern übereinstimmen
       setPickerColor('primary', pickers.primary.value);
       setPickerColor('secondary', pickers.secondary.value);
       setPickerColor('tertiary', pickers.tertiary.value);
     }
 
     // --- Start ---
-    // Ruft die 'init()'-Funktion auf, um das Plugin zu starten
     init();
 
   </script>
